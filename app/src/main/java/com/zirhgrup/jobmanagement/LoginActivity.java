@@ -26,8 +26,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ActionBar bar = getSupportActionBar();
         bar.hide();
-//        mail = findViewById(R.id.editTextTextEmailAddress);
-//        password = findViewById(R.id.editTextTextPassword);
+        mail = findViewById(R.id.editTextEmailAddress);
+        password = findViewById(R.id.editTextPassword);
         mAuth = FirebaseAuth.getInstance();
 
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {

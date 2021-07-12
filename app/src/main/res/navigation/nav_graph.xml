@@ -13,5 +13,7 @@
     <fragment android:id="@+id/addElevatorFragment" android:name="com.zirhgrup.jobmanagement.AddElevatorFragment"
               android:label="fragment_add_elevator" tools:layout="@layout/fragment_add_elevator"/>
     <fragment android:id="@+id/addUser" android:name="com.zirhgrup.jobmanagement.AddUserFragment"
-              android:label="fragment_add_user" tools:layout="@layout/fragment_add_user"/>
+              android:label="fragment_add_user" tools:layout="@layout/fragment_add_user">
+        <action android:id="@+id/action_addUser_to_mainPageFragment" app:destination="@id/mainPageFragment"/>
+    </fragment>
 </navigation>
