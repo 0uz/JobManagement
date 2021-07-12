@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1083107918468",
+    "project_id": "zirhgrup-aadf1",
+    "storage_bucket": "zirhgrup-aadf1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083107918468:android:436d558e2aefdfe78f78d1",
+        "android_client_info": {
+          "package_name": "com.zirhgrup.jobmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083107918468-fdlve7iu8cap0si0djib4e6c3d6i1k6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOwHNu_berzsY8v30YGPe39AEXuZYUWFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083107918468-fdlve7iu8cap0si0djib4e6c3d6i1k6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

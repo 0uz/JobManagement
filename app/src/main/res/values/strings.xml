@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Job Management</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ElevatorListButton">Elevator list</string>
+    <string name="prompt_email">Email</string>
+    <string name="button_login">Login</string>
+    <string name="prompt_password">Password</string>
+    <string name="addElevator">Add Elevator</string>
+    <string name="addUserText">Add User</string>
+    <string name="prompt_name">Name</string>
+    <string name="prompt_surname">Surname</string>
+    <string name="button_signup">Add New User</string>
+</resources>
