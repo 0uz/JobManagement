@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,12 +14,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.zirhgrup.jobmanagement.database.DatabaseLayer;
+import com.zirhgrup.jobmanagement.tools.StaticFun;
 
 public class LoginActivity extends AppCompatActivity {
 
-    FirebaseAuth mAuth;
+    DatabaseLayer db;
     EditText mail;
     EditText password;
+    TextView forgotPW;
 
 
     @Override
@@ -26,33 +31,67 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ActionBar bar = getSupportActionBar();
         bar.hide();
+        db = DatabaseLayer.createDatabase();
+
         mail = findViewById(R.id.editTextEmailAddress);
         password = findViewById(R.id.editTextPassword);
-        mAuth = FirebaseAuth.getInstance();
+        forgotPW = findViewById(R.id.forgotPasswordTextView);
+
 
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+                if (mail.getText().toString().isEmpty()){
+                    mail.setError(getResources().getString(R.string.error_emailEmpty));
+                }else if (password.getText().toString().isEmpty()){
+                    password.setError(getResources().getString(R.string.error_passwordEmpty));
+                }else {
+                    login();
+                }
             }
         });
 
+        forgotPW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String mailTV = mail.getText().toString();
+                if(!StaticFun.validateEmail(mailTV)){
+                    mail.setError("Please Enter mail");
+                    return;
+                }
+                DatabaseLayer.getmAuth().sendPasswordResetEmail(mailTV).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(LoginActivity.this, getResources().getText(R.string.resetMail_Succes), Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(LoginActivity.this, getResources().getText(R.string.resetMail_Fail), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+            }
+        });
 
     }
 
     void login(){
         String email = mail.getText().toString();
         String psw = password.getText().toString();
-        mAuth.signInWithEmailAndPassword(email,psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        DatabaseLayer.getmAuth().signInWithEmailAndPassword(email,psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
+                    db.getUserPermission(email);
                     Intent i = new Intent(LoginActivity.this,MainActivity.class);
-                    i.putExtra("name",email);
                     startActivity(i);
-
+                }else{
+                    Toast.makeText(LoginActivity.this, getResources().getText(R.string.login_error), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+
 }

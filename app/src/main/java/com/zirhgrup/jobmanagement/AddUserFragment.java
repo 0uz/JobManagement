@@ -2,7 +2,10 @@ package com.zirhgrup.jobmanagement;
 
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,20 +27,24 @@ public class AddUserFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        layer = new DatabaseLayer();
+        layer = DatabaseLayer.createDatabase();
         ET_name = view.findViewById(R.id.addUser_editTextName);
         ET_surname = view.findViewById(R.id.addUser_editTextSurname);
         ET_email =  view.findViewById(R.id.addUser_editTextEmail);
-
-        view.findViewById(R.id.addUser_singupButton).setOnClickListener(new View.OnClickListener() {
+        Button singUp = view.findViewById(R.id.addUser_singupButton);
+        singUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 boolean nameVAL = validateString(ET_name,1,R.string.error_nameEmpty,R.string.error_nameShort);
                 boolean surnameVAL = validateString(ET_surname,1,R.string.error_surnameEmpty,R.string.error_surnameShort);
                 boolean emailVAL = validateEmail(ET_email);
                 if (nameVAL && surnameVAL && emailVAL){
-                    layer.createUser(ET_email.getText().toString(),ET_name.getText().toString(),ET_surname.getText().toString(),getActivity(),getContext());
-                    NavHostFragment.findNavController(AddUserFragment.this).navigate(R.id.action_addUser_to_mainPageFragment);
+                    boolean success = layer.createUser(ET_email.getText().toString(),ET_name.getText().toString(),ET_surname.getText().toString());
+                    if (success) {
+                        Toast.makeText(getContext(),getResources().getText(R.string.userRegister_success),Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(getContext(),getResources().getText(R.string.user_exist),Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -83,6 +90,5 @@ public class AddUserFragment extends Fragment {
             return true;
         }
     }
-
 
 }

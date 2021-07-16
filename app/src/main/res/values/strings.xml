@@ -11,10 +11,18 @@
     <string name="prompt_name">Name</string>
     <string name="prompt_surname">Surname</string>
     <string name="button_signup">Add New User</string>
-    <string name="error_nameEmpty">Name must be required</string>
+    <string name="error_nameEmpty">Name required</string>
     <string name="error_nameShort">Name too short</string>
-    <string name="error_surnameEmpty">Surname must be required</string>
+    <string name="error_surnameEmpty">Surname required</string>
     <string name="error_surnameShort">Surname too short</string>
-    <string name="error_emailEmpty">Email must be required</string>
+    <string name="error_emailEmpty">Email required</string>
     <string name="error_emailMatch">Email not valid</string>
+    <string name="user_exist">User already exist</string>
+    <string name="userRegister_success">Register successful</string>
+    <string name="forgot_password">Forgot password</string>
+    <string name="resetMail_Succes">Email sent successfully</string>
+    <string name="resetMail_Fail">Email sent failed</string>
+    <string name="login_error">Email or password is wrong</string>
+    <string name="error_passwordEmpty">Password is empty</string>
+
 </resources>
