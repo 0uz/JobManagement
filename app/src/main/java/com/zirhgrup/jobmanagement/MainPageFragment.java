@@ -2,6 +2,7 @@ package com.zirhgrup.jobmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import androidx.annotation.NonNull;
@@ -57,6 +58,7 @@ public class MainPageFragment extends Fragment {
         Button addElevator = view.findViewById(R.id.addElevatorButton);
         Button addUser = view.findViewById(R.id.addUserButton);
         Button elevatorList =  view.findViewById(R.id.elevatorListButton);
+        Button logout = view.findViewById(R.id.logoutButton);
 
         addElevator.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +78,16 @@ public class MainPageFragment extends Fragment {
         elevatorList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("MSG","SELAM");
 
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layer.signOut(getContext());
+                Intent i =  new Intent(getContext(),LoginActivity.class);
+                startActivity(i);
             }
         });
 

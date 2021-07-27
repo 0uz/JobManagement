@@ -39,12 +39,7 @@ public class AddUserFragment extends Fragment {
                 boolean surnameVAL = validateString(ET_surname,1,R.string.error_surnameEmpty,R.string.error_surnameShort);
                 boolean emailVAL = validateEmail(ET_email);
                 if (nameVAL && surnameVAL && emailVAL){
-                    boolean success = layer.createUser(ET_email.getText().toString(),ET_name.getText().toString(),ET_surname.getText().toString());
-                    if (success) {
-                        Toast.makeText(getContext(),getResources().getText(R.string.userRegister_success),Toast.LENGTH_LONG).show();
-                    }else{
-                        Toast.makeText(getContext(),getResources().getText(R.string.user_exist),Toast.LENGTH_LONG).show();
-                    }
+                   layer.createUser(ET_email.getText().toString(),ET_name.getText().toString(),ET_surname.getText().toString(),getContext());
                 }
             }
         });

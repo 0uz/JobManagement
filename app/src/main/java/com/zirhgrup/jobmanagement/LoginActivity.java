@@ -2,6 +2,7 @@ package com.zirhgrup.jobmanagement;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -86,11 +87,22 @@ public class LoginActivity extends AppCompatActivity {
                     db.getUserPermission(email);
                     Intent i = new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(i);
+                    finish();
                 }else{
                     Toast.makeText(LoginActivity.this, getResources().getText(R.string.login_error), Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 

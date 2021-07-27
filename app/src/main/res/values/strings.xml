@@ -24,5 +24,6 @@
     <string name="resetMail_Fail">Email sent failed</string>
     <string name="login_error">Email or password is wrong</string>
     <string name="error_passwordEmpty">Password is empty</string>
+    <string name="button_logout">Logout</string>
 
 </resources>

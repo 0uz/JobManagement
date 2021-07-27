@@ -3,7 +3,9 @@ package com.zirhgrup.jobmanagement.database;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -13,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.*;
 import com.zirhgrup.jobmanagement.*;
+import com.zirhgrup.jobmanagement.R;
 
 import java.util.*;
 
@@ -39,20 +42,23 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         }
     }
 
-    boolean success;
-    public boolean createUser(String email,String name, String surname){
+
+
+    public void createUser(String email,String name, String surname, Context cont){
         Random rand = new Random();
         int password = rand.nextInt(999999)*100000;
         mAuth.createUserWithEmailAndPassword(email,Integer.toString(password)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                success = task.isSuccessful();
                 if (task.isSuccessful()){
                     createServiceUserInformation(email,name,surname);
+                    Toast.makeText(cont,cont.getResources().getText(R.string.userRegister_success),Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(cont,cont.getResources().getText(R.string.user_exist),Toast.LENGTH_LONG).show();
                 }
             }
         });
-        return success;
+
     }
 
     private void createServiceUserInformation(String email, String name, String surname){
@@ -96,6 +102,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         mAuth.signOut();
         Intent i = new Intent(context,LoginActivity.class);
         context.startActivity(i);
+        ((AppCompatActivity) context).finish();
 
     }
 
