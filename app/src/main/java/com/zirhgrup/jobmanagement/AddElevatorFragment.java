@@ -36,17 +36,23 @@ public class AddElevatorFragment extends Fragment {
     int picCode = 0;
     ImageView imageView;
     TextView[] textViews = new TextView[2];
+    Bitmap[] bitmaps =  new Bitmap[2];
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == Activity.RESULT_OK)
         {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            imageView.setImageBitmap(photo);
+            bitmaps[picCode] = (Bitmap) data.getExtras().get("data");
             textViews[picCode].setText("Photo" + (picCode+1));
+            imageView.setImageBitmap(bitmaps[0]);
             picCode++;
         }
         if (picCode < 2) startCam();
+
+        for (TextView t : textViews){
+            t.setVisibility(View.VISIBLE);
+        }
+        imageView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -64,6 +70,22 @@ public class AddElevatorFragment extends Fragment {
                 startCam();
             }
         });
+
+        textViews[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.setImageBitmap(bitmaps[0]);
+            }
+        });
+
+        textViews[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageView.setImageBitmap(bitmaps[1]);
+            }
+        });
+
+
     }
 
     void startCam(){

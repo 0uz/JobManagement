@@ -1,6 +1,7 @@
 package com.zirhgrup.jobmanagement;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -13,12 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 
 
 public class AddUserFragment extends Fragment {
     EditText ET_name,ET_surname,ET_email;
     DatabaseLayer layer;
+    RecyclerView userRecyclerView;
 
     public AddUserFragment() {
         // Required empty public constructor
@@ -32,6 +36,12 @@ public class AddUserFragment extends Fragment {
         ET_surname = view.findViewById(R.id.addUser_editTextSurname);
         ET_email =  view.findViewById(R.id.addUser_editTextEmail);
         Button singUp = view.findViewById(R.id.addUser_singupButton);
+
+
+        userRecyclerView = view.findViewById(R.id.userDataRecyclerView);
+        layer.downloadUserData(userRecyclerView, getContext());
+
+
         singUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

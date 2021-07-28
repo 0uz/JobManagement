@@ -16,6 +16,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 
+import java.lang.reflect.Array;
+import java.util.Map;
+import java.util.jar.Attributes;
+
 public class MainPageFragment extends Fragment {
 
     static DatabaseLayer layer;
@@ -37,6 +41,7 @@ public class MainPageFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+
     }
 
     @Override
@@ -53,7 +58,6 @@ public class MainPageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         layer =  DatabaseLayer.createDatabase();
         layer.checkCurrentUser(getContext());
-
 
         Button addElevator = view.findViewById(R.id.addElevatorButton);
         Button addUser = view.findViewById(R.id.addUserButton);
@@ -78,6 +82,7 @@ public class MainPageFragment extends Fragment {
         elevatorList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
             }
         });

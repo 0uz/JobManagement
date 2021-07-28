@@ -14,7 +14,8 @@
                 app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="20dp"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp" app:layout_constraintHorizontal_bias="0.0"/>
+                android:layout_marginEnd="16dp" app:layout_constraintHorizontal_bias="0.0"
+                android:visibility="gone"/>
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -137,8 +138,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/addE_photo_button"
                 app:layout_constraintTop_toBottomOf="@+id/addE_imageview"
-                android:layout_marginTop="10dp" app:layout_constraintStart_toStartOf="@+id/addE_imageview"
-                android:textSize="14sp"/>
+                android:layout_marginTop="10dp"
+                android:textSize="14sp" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"/>
         <TextView
                 android:text="Calisan motor sayisi"
                 android:layout_width="wrap_content"
@@ -210,19 +212,24 @@
                 android:layout_marginBottom="20dp"/>
         <TextView
                 android:text="Fotograf1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/addE_TextView1"
-                app:layout_constraintStart_toEndOf="@+id/addE_photo_button" app:layout_constraintTop_toTopOf="@+id/addE_photo_button"
+                android:layout_width="0dp"
+                android:layout_height="0dp" android:id="@+id/addE_TextView1"
+                app:layout_constraintStart_toEndOf="@+id/addE_photo_button"
+                app:layout_constraintTop_toTopOf="@+id/addE_photo_button"
                 app:layout_constraintBottom_toBottomOf="@+id/addE_photo_button" android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp" android:visibility="invisible"
+                app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/addE_TextView2"
+                android:gravity="center"/>
         <TextView
                 android:text="Fotograf2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/addE_TextView2"
+                android:layout_width="0dp"
+                android:layout_height="0dp" android:id="@+id/addE_TextView2"
                 app:layout_constraintBottom_toBottomOf="@+id/addE_TextView1"
-                app:layout_constraintTop_toTopOf="@+id/addE_TextView1" app:layout_constraintStart_toEndOf="@+id/addE_TextView1"
+                app:layout_constraintTop_toTopOf="@+id/addE_TextView1"
+                app:layout_constraintStart_toEndOf="@+id/addE_TextView1"
                 android:layout_marginLeft="10dp" android:layout_marginStart="10dp"
-        />
+                android:visibility="invisible" app:layout_constraintEnd_toEndOf="@+id/addE_imageview"
+                app:layout_constraintHorizontal_bias="0.5" android:gravity="center"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

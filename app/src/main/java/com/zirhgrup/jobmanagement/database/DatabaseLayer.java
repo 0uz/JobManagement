@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,6 +19,9 @@ import com.google.firebase.firestore.*;
 import com.zirhgrup.jobmanagement.*;
 import com.zirhgrup.jobmanagement.R;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -68,6 +73,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         user.put("surname",surname);
         user.put("permission","service");
         user.put("createTime",new Date().getTime());
+        user.put("isBanned",false);
         db.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -96,6 +102,93 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
             }
         });
 
+    }
+
+    Map<String,Object> name = new HashMap<>();
+    Map<String,Object> surname = new HashMap<>();
+    Map<String,Object> mail = new HashMap<>();
+    Map<String,Object> time = new HashMap<>();
+    Map<String,Object> isBanned = new HashMap<>();
+
+    public void downloadUserData(RecyclerView rec, Context cont){
+        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        name.put(doc.getId(), doc.getData().get("name"));
+                        surname.put(doc.getId(), doc.getData().get("surname"));
+                        mail.put(doc.getId(), doc.getData().get("email"));
+                        time.put(doc.getId(), doc.getData().get("createTime"));
+                        isBanned.put(doc.getId(), doc.getData().get("isBanned"));
+                    }
+                    setDataToRecycle(rec, cont);
+                }else{
+                    Log.d("MSG","ERROR");
+                }
+            }
+        });
+
+    }
+
+    void setDataToRecycle(RecyclerView userRecyclerView, Context context){
+        UserRecyclerAdapter adapter = new UserRecyclerAdapter(context,getNameData(),getSurnameData(),getMailData(),getTimeData(),getBanData());
+        userRecyclerView.setAdapter(adapter);
+        userRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+    }
+
+    public String[] getNameData() {
+        String[] data = new String[name.size()];
+        int counter = 0;
+       for(Map.Entry<String, Object> map : name.entrySet()){
+           data[counter] = map.getValue().toString();
+           counter++;
+       }
+       return data;
+    }
+
+    public String[] getSurnameData() {
+        String[] data = new String[surname.size()];
+        int counter = 0;
+        for(Map.Entry<String, Object> map : surname.entrySet()){
+            data[counter] = map.getValue().toString();
+            counter++;
+        }
+        return data;
+    }
+
+    public String[] getMailData() {
+        String[] data = new String[mail.size()];
+        int counter = 0;
+        for(Map.Entry<String, Object> map : mail.entrySet()){
+            data[counter] = map.getValue().toString();
+            counter++;
+        }
+        return data;
+    }
+
+    public String[] getTimeData() {
+        String[] data = new String[time.size()];
+        int counter = 0;
+        Timestamp ts;
+        Date date;
+        for(Map.Entry<String, Object> map : time.entrySet()){
+            ts = new Timestamp(Long.parseLong(map.getValue().toString()));
+            date = ts;
+            data[counter] = new SimpleDateFormat("dd-MM-yyyy").format(date);
+            counter++;
+        }
+        return data;
+    }
+
+    public boolean[] getBanData() {
+        boolean[] data = new boolean[isBanned.size()];
+        int counter = 0;
+        for(Map.Entry<String, Object> map : isBanned.entrySet()){
+            data[counter] = Boolean.getBoolean(map.getValue().toString());
+            counter++;
+        }
+        return data;
     }
 
     public void signOut(Context context){
