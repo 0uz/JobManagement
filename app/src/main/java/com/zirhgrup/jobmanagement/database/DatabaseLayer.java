@@ -1,5 +1,6 @@
 package com.zirhgrup.jobmanagement.database;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -89,19 +90,42 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
 
     }
 
-    public void getUserPermission(String mail){
+    public void getUserLoginData(Context context,String mail,String password){
         Query query = db.collection("users").whereEqualTo("email",mail);
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
                     for (QueryDocumentSnapshot ds : task.getResult()){
-                        Log.d("Permission",ds.get("permission").toString());
+                        login(context,ds.getString("permission"),ds.getBoolean("isBanned"),mail,password);
                     }
                 }
             }
         });
 
+    }
+
+
+    void login(Context activity ,String perm, boolean isBanned, String email , String psw){
+        DatabaseLayer.getmAuth().signInWithEmailAndPassword(email,psw).addOnCompleteListener((Activity) activity, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    if (isBanned){
+                        Toast.makeText(activity, "You are banned", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (perm.equals("admin")){
+                        Intent i = new Intent(activity, MainActivity.class);
+                        activity.startActivity(i);
+                        ((AppCompatActivity) activity).finish();
+                    }
+
+                }else{
+                    Toast.makeText(activity, activity.getResources().getText(R.string.login_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     Map<String,Object> name = new HashMap<>();
@@ -111,7 +135,8 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
     Map<String,Object> isBanned = new HashMap<>();
 
     public void downloadUserData(RecyclerView rec, Context cont){
-        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("users").whereNotEqualTo("permission","admin").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()){
@@ -185,7 +210,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         boolean[] data = new boolean[isBanned.size()];
         int counter = 0;
         for(Map.Entry<String, Object> map : isBanned.entrySet()){
-            data[counter] = Boolean.getBoolean(map.getValue().toString());
+            data[counter] = Boolean.parseBoolean(map.getValue().toString());
             counter++;
         }
         return data;
@@ -203,6 +228,37 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
        FirebaseUser user =  mAuth.getCurrentUser();
        if (user == null){
            signOut(context);
+       }
+    }
+
+    public void ban_unBanUser(Context cont ,String email, boolean ban){
+        db.collection("users").whereEqualTo("email",email).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        for (QueryDocumentSnapshot doc : task.getResult()){
+                            ban_UnBan(cont , doc.getId(), ban);
+                        }
+                    }
+                });
+    }
+
+   private void ban_UnBan(Context cont,String id, boolean ban){
+       DocumentReference ref = db.collection("users").document(id);
+       if(ban) {
+           ref.update("isBanned",true).addOnSuccessListener(new OnSuccessListener<Void>() {
+               @Override
+               public void onSuccess(Void unused) {
+                   Toast.makeText(cont, "Successfully Banned", Toast.LENGTH_SHORT).show();
+               }
+           });
+       }else{
+           ref.update("isBanned",false).addOnSuccessListener(new OnSuccessListener<Void>() {
+               @Override
+               public void onSuccess(Void unused) {
+                   Toast.makeText(cont, "Successfully UnBanned", Toast.LENGTH_SHORT).show();
+               }
+           });
        }
     }
 

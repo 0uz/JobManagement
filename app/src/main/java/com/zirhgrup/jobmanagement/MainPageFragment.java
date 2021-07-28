@@ -83,7 +83,6 @@ public class MainPageFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-
             }
         });
 

@@ -2,14 +2,18 @@ package com.zirhgrup.jobmanagement;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 
 
 public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapter.UserViewHolder> {
@@ -41,10 +45,18 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         holder.tv1.setText(nameData[position]+" "+ surnameData[position]);
         holder.tv2.setText(mailData[position]);
         holder.tv3.setText(timeData[position]);
+        DatabaseLayer layer = DatabaseLayer.createDatabase();
         if (isBannedData[position]){
             holder.switchBan.setChecked(true);
+
         }
         holder.iv.setImageResource(R.drawable.mechanic);
+        holder.switchBan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                layer.ban_unBanUser(context, mailData[position],isChecked);
+            }
+        });
     }
 
     @Override

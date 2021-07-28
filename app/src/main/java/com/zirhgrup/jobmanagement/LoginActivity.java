@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
                 }else if (password.getText().toString().isEmpty()){
                     password.setError(getResources().getString(R.string.error_passwordEmpty));
                 }else {
-                    login();
+                    db.getUserLoginData(LoginActivity.this,mail.getText().toString(),password.getText().toString());
                 }
             }
         });
@@ -77,23 +77,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    void login(){
-        String email = mail.getText().toString();
-        String psw = password.getText().toString();
-        DatabaseLayer.getmAuth().signInWithEmailAndPassword(email,psw).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    db.getUserPermission(email);
-                    Intent i = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }else{
-                    Toast.makeText(LoginActivity.this, getResources().getText(R.string.login_error), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
