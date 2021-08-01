@@ -3,7 +3,11 @@ package com.zirhgrup.jobmanagement.database;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,23 +21,33 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.*;
-import com.zirhgrup.jobmanagement.*;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.zirhgrup.jobmanagement.LoginActivity;
+import com.zirhgrup.jobmanagement.MainActivity;
 import com.zirhgrup.jobmanagement.R;
+import com.zirhgrup.jobmanagement.UserRecyclerAdapter;
+import com.zirhgrup.jobmanagement.model.Elevator;
 
-import java.sql.Time;
+import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
+
     static private FirebaseAuth mAuth;
     static private FirebaseFirestore db;
+    FirebaseStorage storage;
+    StorageReference reference;
     private static Set<DatabaseLayer> databaseLayers = new HashSet<DatabaseLayer>();
 
     public DatabaseLayer() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
     }
 
     public static DatabaseLayer createDatabase(){
@@ -47,6 +61,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
             return new DatabaseLayer();
         }
     }
+
 
 
 
@@ -107,7 +122,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
 
 
     void login(Context activity ,String perm, boolean isBanned, String email , String psw){
-        DatabaseLayer.getmAuth().signInWithEmailAndPassword(email,psw).addOnCompleteListener((Activity) activity, new OnCompleteListener<AuthResult>() {
+        mAuth.signInWithEmailAndPassword(email,psw).addOnCompleteListener((Activity) activity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
@@ -134,7 +149,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
     Map<String,Object> time = new HashMap<>();
     Map<String,Object> isBanned = new HashMap<>();
 
-    public void downloadUserData(RecyclerView rec, Context cont){
+    public void downloadUserData(RecyclerView rec, Context cont, ProgressBar bar){
         db.collection("users").whereNotEqualTo("permission","admin").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -148,6 +163,7 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
                         isBanned.put(doc.getId(), doc.getData().get("isBanned"));
                     }
                     setDataToRecycle(rec, cont);
+                    bar.setVisibility(View.GONE);
                 }else{
                     Log.d("MSG","ERROR");
                 }
@@ -261,6 +277,55 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
            });
        }
     }
+
+
+    public void uploadElevatorData(Elevator elevator){
+        if (elevator.getPhotoURL1() != null &&  elevator.getPhotoURL2() != null) {
+            db.collection("elevators").document().set(elevator);
+        }
+    }
+
+    public void uploadPhotos(Bitmap pho1 , Bitmap pho2, Elevator elevator){
+        reference = storage.getReference("elevators").child(System.currentTimeMillis()+".png");
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+        pho1.compress(Bitmap.CompressFormat.PNG,100,baos1);
+        byte[] data = baos1.toByteArray();
+        reference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                getDownloadURL(reference , elevator,1);
+            }
+        });
+        pho2.compress(Bitmap.CompressFormat.PNG,100,baos2);
+        data = baos2.toByteArray();
+        reference = storage.getReference("elevators").child(System.currentTimeMillis()+".png");
+
+        reference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                getDownloadURL(reference ,elevator,2);
+            }
+        });
+
+    }
+
+    void getDownloadURL(StorageReference reference, Elevator elevator , int photoID){
+        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                if (photoID == 1) {
+                    elevator.setPhotoURL1(uri.toString());
+                    uploadElevatorData(elevator);
+                }else{
+                    elevator.setPhotoURL2(uri.toString());
+                    uploadElevatorData(elevator);
+                }
+            }
+        });
+    }
+
+
 
     public static FirebaseAuth getmAuth() {
         return mAuth;

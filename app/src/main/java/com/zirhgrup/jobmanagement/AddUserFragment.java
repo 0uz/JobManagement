@@ -1,14 +1,19 @@
 package com.zirhgrup.jobmanagement;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +21,9 @@ import android.view.ViewGroup;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 
 
@@ -23,6 +31,9 @@ public class AddUserFragment extends Fragment {
     EditText ET_name,ET_surname,ET_email;
     DatabaseLayer layer;
     RecyclerView userRecyclerView;
+    ProgressBar progressBar;
+    Button singUp;
+
 
     public AddUserFragment() {
         // Required empty public constructor
@@ -35,11 +46,13 @@ public class AddUserFragment extends Fragment {
         ET_name = view.findViewById(R.id.addUser_editTextName);
         ET_surname = view.findViewById(R.id.addUser_editTextSurname);
         ET_email =  view.findViewById(R.id.addUser_editTextEmail);
-        Button singUp = view.findViewById(R.id.addUser_singupButton);
+        singUp = view.findViewById(R.id.addUser_singupButton);
+        progressBar = view.findViewById(R.id.addUser_ProgressBar);
+
 
 
         userRecyclerView = view.findViewById(R.id.userDataRecyclerView);
-        layer.downloadUserData(userRecyclerView, getContext());
+        layer.downloadUserData(userRecyclerView, getContext(), progressBar);
 
 
         singUp.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +66,8 @@ public class AddUserFragment extends Fragment {
                 }
             }
         });
+
+
 
 
     }

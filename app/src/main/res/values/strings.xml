@@ -25,5 +25,17 @@
     <string name="login_error">Email or password is wrong</string>
     <string name="error_passwordEmpty">Password is empty</string>
     <string name="button_logout">Logout</string>
+    <string name="empty">Can not be empty</string>
+
+    <string-array name="HorizontalTypeArray">
+        <item>Hydraulic</item>
+        <item>Screwed</item>
+    </string-array>
+
+    <string-array name="StairsTypeArray">
+        <item>Eco</item>
+        <item>Gold</item>
+        <item>Premium</item>
+    </string-array>
 
 </resources>
