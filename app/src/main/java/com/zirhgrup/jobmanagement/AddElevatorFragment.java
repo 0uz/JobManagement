@@ -6,26 +6,38 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.*;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.GeoPoint;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 import com.zirhgrup.jobmanagement.model.Elevator;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 public class AddElevatorFragment extends Fragment {
@@ -42,7 +54,7 @@ public class AddElevatorFragment extends Fragment {
     FusedLocationProviderClient fusedLocationProviderClient;
     GeoPoint locationPoint;
     DatabaseLayer layer;
-;
+    FragmentManager fragmentManager;
 
     public AddElevatorFragment() {
         // Required empty public constructor
@@ -55,26 +67,44 @@ public class AddElevatorFragment extends Fragment {
         super.onCreate(savedInstanceState);
         layer = DatabaseLayer.createDatabase();
 
+
     }
-    int picCode = 0;
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK)
-        {
-            bitmaps[picCode] = (Bitmap) data.getExtras().get("data");
-            textViews[picCode].setText("Photo" + (picCode+1));
-            imageView.setImageBitmap(bitmaps[0]);
-            picCode++;
-        }
-        if (picCode < 2) startCam();
-
-        for (TextView t : textViews){
-            t.setVisibility(View.VISIBLE);
-        }
-        imageView.setVisibility(View.VISIBLE);
+    public void onStart() {
+        super.onStart();
+        getChildFragmentManager().setFragmentResultListener("location", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                LatLng data = result.getParcelable("location");
+                locationTV.setText(data.latitude+"N\n"+ data.longitude+"E");
+            }
+        });
     }
+
+    int picCode = 0;
+    ActivityResultLauncher<Intent>  activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK)
+                    {
+                        bitmaps[picCode] = (Bitmap) result.getData().getExtras().get("data");
+                        textViews[picCode].setText("Photo" + (picCode+1));
+                        imageView.setImageBitmap(bitmaps[0]);
+                        picCode++;
+                    }
+                    if (picCode < 2) startCam();
+
+                    for (TextView t : textViews){
+                        t.setVisibility(View.VISIBLE);
+                    }
+                    imageView.setVisibility(View.VISIBLE);
+                }
+            }
+    );
+
 
     void createToast(){
         Toast.makeText(getContext(), "Please fill all blanks", Toast.LENGTH_SHORT).show();
@@ -115,6 +145,21 @@ public class AddElevatorFragment extends Fragment {
         spin.setAdapter(adapter);
     }
 
+    ActivityResultLauncher<String> mPermissionResult = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            new ActivityResultCallback<Boolean>() {
+                @Override
+                public void onActivityResult(Boolean result) {
+                    if (result){
+//                        navigate to map screen
+                        NavHostFragment.findNavController(AddElevatorFragment.this).navigate(R.id.action_addElevatorFragment_to_mapsFragment);
+                    }else{
+                        Toast.makeText(getContext(), "Please check your location permissions", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -143,27 +188,30 @@ public class AddElevatorFragment extends Fragment {
         platformWidthEditT = view.findViewById(R.id.addE_widthPlatformEditText);
         workHeightEditT = view.findViewById(R.id.addE_heightWorkEditText);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+
 
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getContext(), "Please check your location permission", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        locationPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
-                        locationTV.setText(location.getLatitude()+"N\n"+ location.getLongitude()+"E");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("MSG",e.getMessage());
-                    }
-                });
+                mPermissionResult.launch(ACCESS_FINE_LOCATION);
+
+//                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(getContext(), "Please check your location permission", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+//                    @Override
+//                    public void onSuccess(Location location) {
+//                        locationPoint = new GeoPoint(location.getLatitude(),location.getLongitude());
+//                        locationTV.setText(location.getLatitude()+"N\n"+ location.getLongitude()+"E");
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d("MSG",e.getMessage());
+//                    }
+//                });
             }
         });
 
@@ -173,6 +221,8 @@ public class AddElevatorFragment extends Fragment {
                 selectSpinnerType(spinner,checkedId);
             }
         });
+
+
 
 
 
@@ -188,8 +238,7 @@ public class AddElevatorFragment extends Fragment {
                     return;
                 }
 
-
-                if(serialEditT.getText().toString().isEmpty()){
+                if(serialEditT.getText().toString().isEmpty() && serialEditT.getText().toString().length() < 7){
                   serialEditT.setError(emptyError);
                   createToast();
                   return;
@@ -271,7 +320,6 @@ public class AddElevatorFragment extends Fragment {
                     currentCapacity = Elevator.WorkingCapacity.KG350;
 
 
-
                 Elevator elevator = new Elevator(serialEditT.getText().toString(),
                         spinner.getSelectedItem().toString(),
                         currentType,
@@ -279,6 +327,7 @@ public class AddElevatorFragment extends Fragment {
                         Double.valueOf(platformHeightEditT.getText().toString()),
                         Double.valueOf(platformWidthEditT.getText().toString()),
                         Double.valueOf(workHeightEditT.getText().toString()),currentEngine,currentCapacity,locationPoint);
+
                 layer.uploadPhotos(bitmaps[0],bitmaps[1],elevator);
 
             }
@@ -320,7 +369,7 @@ public class AddElevatorFragment extends Fragment {
 
     void startCam(){
         Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(i, 1);
+        activityResultLauncher.launch(i);
     }
 
     @Override

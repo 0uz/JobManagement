@@ -11,9 +11,15 @@
         <action android:id="@+id/action_mainPageFragment_to_addUser" app:destination="@id/addUser"/>
     </fragment>
     <fragment android:id="@+id/addElevatorFragment" android:name="com.zirhgrup.jobmanagement.AddElevatorFragment"
-              android:label="fragment_add_elevator" tools:layout="@layout/fragment_add_elevator"/>
+              android:label="fragment_add_elevator" tools:layout="@layout/fragment_add_elevator">
+        <action android:id="@+id/action_addElevatorFragment_to_mapsFragment" app:destination="@id/mapsFragment"/>
+    </fragment>
     <fragment android:id="@+id/addUser" android:name="com.zirhgrup.jobmanagement.AddUserFragment"
               android:label="fragment_add_user" tools:layout="@layout/fragment_add_user">
         <action android:id="@+id/action_addUser_to_mainPageFragment" app:destination="@id/mainPageFragment"/>
+    </fragment>
+    <fragment android:id="@+id/mapsFragment" android:name="com.zirhgrup.jobmanagement.MapsFragment"
+              android:label="fragment_maps" tools:layout="@layout/fragment_maps">
+        <action android:id="@+id/action_mapsFragment_to_addElevatorFragment" app:destination="@id/addElevatorFragment"/>
     </fragment>
 </navigation>

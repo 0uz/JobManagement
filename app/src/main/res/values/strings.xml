@@ -26,6 +26,7 @@
     <string name="error_passwordEmpty">Password is empty</string>
     <string name="button_logout">Logout</string>
     <string name="empty">Can not be empty</string>
+    <string name="button_location">Set elevator location</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>
