@@ -21,7 +21,6 @@ public class MainPageFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static MainPageFragment newInstance(String param1, String param2) {
         MainPageFragment fragment = new MainPageFragment();
         Bundle args = new Bundle();

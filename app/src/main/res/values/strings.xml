@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Job Management</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ElevatorListButton">Elevator list</string>
     <string name="prompt_email">Email</string>
@@ -27,6 +26,12 @@
     <string name="button_logout">Logout</string>
     <string name="empty">Can not be empty</string>
     <string name="button_location">Set elevator location</string>
+    <string name="location_information">Location information</string>
+    <string name="save_success">Saved successfully</string>
+    <string name="upload_starting">"Upload starting please wait"</string>
+    <string name="select_two_photo">Please seslect only 2 photo</string>
+    <string name="photo_one">Photo 1</string>
+    <string name="photo_tow">Photo 2</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>

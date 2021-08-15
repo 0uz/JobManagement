@@ -41,7 +41,6 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
     static private FirebaseAuth mAuth;
     static private FirebaseFirestore db;
     FirebaseStorage storage;
-    StorageReference reference;
     private static Set<DatabaseLayer> databaseLayers = new HashSet<DatabaseLayer>();
 
     public DatabaseLayer() {
@@ -62,10 +61,11 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         }
     }
 
+    public FirebaseStorage getStorage() {
+        return storage;
+    }
 
-
-
-    public void createUser(String email,String name, String surname, Context cont){
+    public void createUser(String email, String name, String surname, Context cont){
         Random rand = new Random();
         int password = rand.nextInt(999999)*100000;
         mAuth.createUserWithEmailAndPassword(email,Integer.toString(password)).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -285,45 +285,9 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         }
     }
 
-    public void uploadPhotos(Bitmap pho1 , Bitmap pho2, Elevator elevator){
-        reference = storage.getReference("elevators").child(System.currentTimeMillis()+".png");
-        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-        pho1.compress(Bitmap.CompressFormat.PNG,100,baos1);
-        byte[] data = baos1.toByteArray();
-        reference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                getDownloadURL(reference , elevator,1);
-            }
-        });
-        pho2.compress(Bitmap.CompressFormat.PNG,100,baos2);
-        data = baos2.toByteArray();
-        reference = storage.getReference("elevators").child(System.currentTimeMillis()+".png");
 
-        reference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                getDownloadURL(reference ,elevator,2);
-            }
-        });
 
-    }
 
-    void getDownloadURL(StorageReference reference, Elevator elevator , int photoID){
-        reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                if (photoID == 1) {
-                    elevator.setPhotoURL1(uri.toString());
-                    uploadElevatorData(elevator);
-                }else{
-                    elevator.setPhotoURL2(uri.toString());
-                    uploadElevatorData(elevator);
-                }
-            }
-        });
-    }
 
 
 
