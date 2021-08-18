@@ -12,48 +12,46 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
+import com.zirhgrup.jobmanagement.databinding.ActivityLoginBinding;
 import com.zirhgrup.jobmanagement.tools.StaticFun;
 
 public class LoginActivity extends AppCompatActivity {
 
     DatabaseLayer db;
-    EditText mail;
-    EditText password;
-    TextView forgotPW;
+    private ActivityLoginBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+
         ActionBar bar = getSupportActionBar();
         bar.hide();
         db = DatabaseLayer.createDatabase();
 
-        mail = findViewById(R.id.editTextEmailAddress);
-        password = findViewById(R.id.editTextPassword);
-        forgotPW = findViewById(R.id.forgotPasswordTextView);
 
-
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        binding.loginButon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mail.getText().toString().isEmpty()){
-                    mail.setError(getResources().getString(R.string.error_emailEmpty));
-                }else if (password.getText().toString().isEmpty()){
-                    password.setError(getResources().getString(R.string.error_passwordEmpty));
+                if (binding.editTextEmailAddress.getText().toString().isEmpty()){
+                    binding.editTextEmailAddress.setError(getResources().getString(R.string.error_emailEmpty));
+                }else if (binding.editTextPassword.getText().toString().isEmpty()){
+                    binding.editTextPassword.setError(getResources().getString(R.string.error_passwordEmpty));
                 }else {
-                    db.getUserLoginData(LoginActivity.this,mail.getText().toString(),password.getText().toString());
+                    db.getUserLoginData(LoginActivity.this,binding.editTextEmailAddress.getText().toString(),binding.editTextPassword.getText().toString());
                 }
             }
         });
 
-        forgotPW.setOnClickListener(new View.OnClickListener() {
+        binding.forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mailTV = mail.getText().toString();
+                String mailTV = binding.editTextEmailAddress.getText().toString();
                 if(!StaticFun.validateEmail(mailTV)){
-                    mail.setError("Please Enter mail");
+                    binding.editTextEmailAddress.setError("Please Enter mail");
                     return;
                 }
                 DatabaseLayer.getmAuth().sendPasswordResetEmail(mailTV).addOnCompleteListener(new OnCompleteListener<Void>() {

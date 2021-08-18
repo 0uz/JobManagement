@@ -1,34 +1,37 @@
-package com.zirhgrup.jobmanagement;
+package com.zirhgrup.jobmanagement.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.zirhgrup.jobmanagement.R;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
+import com.zirhgrup.jobmanagement.model.Service;
+import com.zirhgrup.jobmanagement.tools.StaticFun;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 
 public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapter.UserViewHolder> {
-    String[] nameData,surnameData,mailData;
-    String[] timeData;
-    boolean[] isBannedData;
+    List<Service> services;
     Context context;
 
-    public UserRecyclerAdapter(Context ct, String[] name, String[] surname, String[] email, String[] time , boolean[] isBanned){
+    public UserRecyclerAdapter(Context ct, List<Service> services){
         context=ct;
-        nameData=name;
-        surnameData=surname;
-        mailData=email;
-        timeData=time;
-        isBannedData = isBanned;
+        this.services = services;
     }
 
     @NonNull
@@ -41,27 +44,31 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
-        Resources res  = context.getResources();
-        holder.tv1.setText(nameData[position]+" "+ surnameData[position]);
-        holder.tv2.setText(mailData[position]);
-        holder.tv3.setText(timeData[position]);
-        DatabaseLayer layer = DatabaseLayer.createDatabase();
-        if (isBannedData[position]){
+        holder.tv1.setText(services.get(position).getName()+" "+ services.get(position).getSurname());
+        holder.tv2.setText(services.get(position).getEmail());
+        holder.tv3.setText(StaticFun.getTimeData(services.get(position).getCreateTime()));
+        Log.d("perm",services.get(position).isBanned()+"");
+        if (services.get(position).isBanned()){
             holder.switchBan.setChecked(true);
-
         }
         holder.iv.setImageResource(R.drawable.mechanic);
         holder.switchBan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                layer.ban_unBanUser(context, mailData[position],isChecked);
+                if (isChecked){
+                    DatabaseLayer.getDb().collection("users").document(services.get(position).getEmail()).update("banned",true);
+                    Toast.makeText(context, context.getString(R.string.ban_success), Toast.LENGTH_SHORT).show();
+                }else{
+                    DatabaseLayer.getDb().collection("users").document(services.get(position).getEmail()).update("banned",false);
+                    Toast.makeText(context, context.getString(R.string.unban_success), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return nameData.length;
+        return services.size();
     }
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
@@ -79,4 +86,8 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             iv = itemView.findViewById(R.id.userRow_imageView);
         }
     }
+
+
+
+
 }

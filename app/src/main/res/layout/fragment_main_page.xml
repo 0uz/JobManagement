@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context=".MainPageFragment" android:id="@+id/ConstraintLayout">
+
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/linearLayout">
-        <Button
-                android:text="@string/addElevator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/addElevatorButton"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="15dp" android:layout_marginStart="15dp" android:layout_marginTop="15dp">
         <Button
                 android:text="@string/ElevatorListButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/elevatorListButton"/>
+                android:layout_height="wrap_content" android:id="@+id/elevatorListButton"
+        />
+        <Button
+                android:text="@string/addElevator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/addElevatorButton"
+        />
         <Button
                 android:text="@string/addUserText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/addUserButton"/>
-    </LinearLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteY="250dp">
-
+                android:layout_height="wrap_content" android:id="@+id/addUserButton"
+        />
         <Button
-                android:text="@string/button_logout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/logoutButton"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginRight="30dp" android:layout_marginEnd="30dp" android:layout_marginBottom="30dp"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:text="@string/list_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/listUserButton"
+        />
+    </LinearLayout>
+    <Button
+            android:text="@string/button_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/logoutButton"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="15dp" android:layout_marginBottom="15dp"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

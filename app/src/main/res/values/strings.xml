@@ -32,6 +32,10 @@
     <string name="select_two_photo">Please seslect only 2 photo</string>
     <string name="photo_one">Photo 1</string>
     <string name="photo_tow">Photo 2</string>
+    <string name="prompt_phone">Phone number</string>
+    <string name="list_user">List Users</string>
+    <string name="ban_success">Banned successfuly</string>
+    <string name="unban_success">Unbanned succesfully</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>
