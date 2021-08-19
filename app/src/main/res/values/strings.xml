@@ -29,13 +29,31 @@
     <string name="location_information">Location information</string>
     <string name="save_success">Saved successfully</string>
     <string name="upload_starting">"Upload starting please wait"</string>
-    <string name="select_two_photo">Please seslect only 2 photo</string>
+    <string name="select_two_photo">Please select only 2 photo</string>
     <string name="photo_one">Photo 1</string>
     <string name="photo_tow">Photo 2</string>
     <string name="prompt_phone">Phone number</string>
     <string name="list_user">List Users</string>
-    <string name="ban_success">Banned successfuly</string>
-    <string name="unban_success">Unbanned succesfully</string>
+    <string name="ban_success">Banned successfully</string>
+    <string name="unban_success">Unbanned successfully</string>
+    <string name="workingCapacity">Working Capacity</string>
+    <string name="WorkingEngineNumber">Number of working engine</string>
+    <string name="WorkingHeight">Working Height (cm)</string>
+    <string name="SelectPhoto">Select photo</string>
+    <string name="Width">Width</string>
+    <string name="height">Height</string>
+    <string name="platformSize">Platform size (cm)</string>
+    <string name="stainless_paint">Stainless paint</string>
+    <string name="static_paint">Static paint</string>
+    <string name="stairs_type">Stairs type</string>
+    <string name="horizontal_type">Horizontal type</string>
+    <string name="serial_no">Serial no</string>
+    <string name="customer_ares">Customer Informations</string>
+    <string name="location_permission">Please check your location permissions</string>
+    <string name="location_error">Please get elevator location</string>
+    <string name="elevator_exist">Elevator exist with this serial ID</string>
+    <string name="serial_lenght">Serial id have to 7 characters</string>
+    <string name="serial_error">"Format must be : 14-1234 "</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>

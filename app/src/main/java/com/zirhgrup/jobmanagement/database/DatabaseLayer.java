@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -17,6 +18,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.zirhgrup.jobmanagement.LoginActivity;
 import com.zirhgrup.jobmanagement.MainActivity;
 import com.zirhgrup.jobmanagement.R;
+import com.zirhgrup.jobmanagement.model.Customer;
 import com.zirhgrup.jobmanagement.model.Elevator;
 import com.zirhgrup.jobmanagement.model.User;
 
@@ -134,11 +136,14 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
     }
 
 
-    public void uploadElevatorData(Elevator elevator){
+    public void uploadElevatorData(Elevator elevator, Customer customer){
         if (elevator.getPhotoURL1() != null &&  elevator.getPhotoURL2() != null) {
-            db.collection("elevators").document().set(elevator);
+            db.collection("elevators").document(elevator.getSerialNo()).set(elevator);
+            db.collection("elevators").document(elevator.getSerialNo()).collection("customers").document(customer.getEmail()).set(customer);
         }
     }
+
+
 
 
 

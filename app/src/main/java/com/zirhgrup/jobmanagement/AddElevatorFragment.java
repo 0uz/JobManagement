@@ -1,22 +1,21 @@
 package com.zirhgrup.jobmanagement;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.graphics.Matrix;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -24,35 +23,25 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 import com.zirhgrup.jobmanagement.databinding.FragmentAddElevatorBinding;
+import com.zirhgrup.jobmanagement.model.Customer;
 import com.zirhgrup.jobmanagement.model.Elevator;
+import com.zirhgrup.jobmanagement.tools.StaticFun;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -193,7 +182,7 @@ public class AddElevatorFragment extends Fragment {
 //                        navigate to map screen
                         NavHostFragment.findNavController(AddElevatorFragment.this).navigate(R.id.action_addElevatorFragment_to_mapsFragment);
                     } else {
-                        Toast.makeText(getContext(), "Please check your location permissions", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.location_permission), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -268,110 +257,56 @@ public class AddElevatorFragment extends Fragment {
             }
         });
 
+        binding.addESerialEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count > 2){
+                    if(s.charAt(2) != '-'){
+                        binding.addESerialEditText.setText(s.subSequence(0,2)+"-"+s.subSequence(2,s.length()));
+                        binding.addESerialEditText.setSelection(count+1);
+                    }
+                }
+                if (count<7){
+                    binding.addESerialEditText.setError(getString(R.string.serial_lenght));
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String emptyError = getResources().getString(R.string.empty);
-                if (bitmaps.size() == 0) {
-                    photoUpload.setError("Please upload photo");
-                    createTimerButtonError(photoUpload, "Please upload photo");
-                    createToast();
+                if (binding.addESerialEditText.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), getString(R.string.empty), Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (serialEditT.getText().toString().isEmpty() && serialEditT.getText().toString().length() < 7) {
-                    serialEditT.setError(emptyError);
-                    createToast();
+                if (binding.addESerialEditText.getText().toString().length() < 7){
+                    Toast.makeText(getContext(), getString(R.string.serial_lenght), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (typeGroup.getCheckedRadioButtonId() == -1) {
-                    RadioButton r = view.findViewById(R.id.radioStairsType);
-                    createTimerRadioError(stairsType, emptyError);
-                    createToast();
-                    return;
-                }
+                DatabaseLayer.getDb().collection("elevators").document(binding.addESerialEditText.getText().toString()).get().
+                        addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult().exists()&&binding.addESerialEditText.getError().length()==0){
+                                    Toast.makeText(getContext(), getString(R.string.elevator_exist), Toast.LENGTH_SHORT).show();
+                                }else{
+                                    checkFields();
+                                }
 
-                if (paintingGroup.getCheckedRadioButtonId() == -1) {
-                    RadioButton r = view.findViewById(R.id.radioStainlessPainting);
-                    createTimerRadioError(r, emptyError);
-                    createToast();
-                    return;
-                }
-
-                if (platformHeightEditT.getText().toString().isEmpty()) {
-                    platformHeightEditT.setError(emptyError);
-                    createToast();
-                    return;
-                }
-
-                if (platformWidthEditT.getText().toString().isEmpty()) {
-                    platformWidthEditT.setError(emptyError);
-                    createToast();
-                    return;
-                }
-
-                if (workHeightEditT.getText().toString().isEmpty()) {
-                    workHeightEditT.setError(emptyError);
-                    createToast();
-                    return;
-                }
-
-                if (engineGroup.getCheckedRadioButtonId() == -1) {
-                    RadioButton r = view.findViewById(R.id.radioFiveEngine);
-                    createTimerRadioError(r, emptyError);
-                    createToast();
-                    return;
-                }
-
-                if (capacityGroup.getCheckedRadioButtonId() == -1) {
-                    RadioButton r = view.findViewById(R.id.radio350kg);
-                    createTimerRadioError(r, emptyError);
-                    createToast();
-                    return;
-                }
-
-                if (locationPoint == null) {
-                    createTimerButtonError(location, "Please get your location!");
-                    createToast();
-                }
-
-                Elevator.ElevatorType currentType;
-                Elevator.PaintingType currentPainting;
-                Elevator.WorkingEngine currentEngine;
-                Elevator.WorkingCapacity currentCapacity;
-                if (typeGroup.getCheckedRadioButtonId() == R.id.radioHorizontalType)
-                    currentType = Elevator.ElevatorType.HORIZONTAL;
-                else
-                    currentType = Elevator.ElevatorType.STAIRS;
-
-                if (paintingGroup.getCheckedRadioButtonId() == R.id.radioStaticPainting)
-                    currentPainting = Elevator.PaintingType.STATIC;
-                else
-                    currentPainting = Elevator.PaintingType.STAINLESS;
-
-                if (engineGroup.getCheckedRadioButtonId() == R.id.radioTwoEngine)
-                    currentEngine = Elevator.WorkingEngine.TWO;
-                else
-                    currentEngine = Elevator.WorkingEngine.FIVE;
-
-                if (capacityGroup.getCheckedRadioButtonId() == R.id.radio125kg)
-                    currentCapacity = Elevator.WorkingCapacity.KG125;
-                else if (capacityGroup.getCheckedRadioButtonId() == R.id.radio225kg)
-                    currentCapacity = Elevator.WorkingCapacity.KG225;
-                else
-                    currentCapacity = Elevator.WorkingCapacity.KG350;
-
-
-                Elevator elevator = new Elevator(serialEditT.getText().toString(),
-                        spinner.getSelectedItem().toString(),
-                        currentType,
-                        currentPainting,
-                        Double.valueOf(platformHeightEditT.getText().toString()),
-                        Double.valueOf(platformWidthEditT.getText().toString()),
-                        Double.valueOf(workHeightEditT.getText().toString()), currentEngine, currentCapacity, locationPoint);
-
-                uploadElevatorData(elevator);
+                            }
+                        });
 
             }
         });
@@ -399,11 +334,137 @@ public class AddElevatorFragment extends Fragment {
                 currentImage = 1;
             }
         });
-
-
     }
 
-    public void uploadElevatorData(Elevator elevator) {
+    void checkFields(){
+        String emptyError = getResources().getString(R.string.empty);
+        if (bitmaps.size() == 0) {
+            photoUpload.setError("Please upload photo");
+            createTimerButtonError(photoUpload, "Please upload photo");
+            createToast();
+            return;
+        }
+
+        if (serialEditT.getText().toString().isEmpty() && serialEditT.getText().toString().length() < 7) {
+            serialEditT.setError(emptyError);
+            createToast();
+            return;
+        }
+
+
+
+        if (typeGroup.getCheckedRadioButtonId() == -1) {
+            createTimerRadioError(binding.radioStairsType, emptyError);
+            createToast();
+            return;
+        }
+
+        if (paintingGroup.getCheckedRadioButtonId() == -1) {
+            createTimerRadioError(binding.radioStainlessPainting, emptyError);
+            createToast();
+            return;
+        }
+
+        if (platformHeightEditT.getText().toString().isEmpty()) {
+            platformHeightEditT.setError(emptyError);
+            createToast();
+            return;
+        }
+
+        if (platformWidthEditT.getText().toString().isEmpty()) {
+            platformWidthEditT.setError(emptyError);
+            createToast();
+            return;
+        }
+
+        if (workHeightEditT.getText().toString().isEmpty()) {
+            workHeightEditT.setError(emptyError);
+            createToast();
+            return;
+        }
+
+        if (engineGroup.getCheckedRadioButtonId() == -1) {
+            createTimerRadioError(binding.radioFiveEngine, emptyError);
+            createToast();
+            return;
+        }
+
+        if (capacityGroup.getCheckedRadioButtonId() == -1) {
+            createTimerRadioError(binding.radio350kg, emptyError);
+            createToast();
+            return;
+        }
+
+        if (locationPoint == null) {
+            createTimerButtonError(location, getString(R.string.location_error));
+            createToast();
+        }
+
+        Elevator.ElevatorType currentType;
+        Elevator.PaintingType currentPainting;
+        Elevator.WorkingEngine currentEngine;
+        Elevator.WorkingCapacity currentCapacity;
+        if (typeGroup.getCheckedRadioButtonId() == R.id.radioHorizontalType)
+            currentType = Elevator.ElevatorType.HORIZONTAL;
+        else
+            currentType = Elevator.ElevatorType.STAIRS;
+
+        if (paintingGroup.getCheckedRadioButtonId() == R.id.radioStaticPainting)
+            currentPainting = Elevator.PaintingType.STATIC;
+        else
+            currentPainting = Elevator.PaintingType.STAINLESS;
+
+        if (engineGroup.getCheckedRadioButtonId() == R.id.radioTwoEngine)
+            currentEngine = Elevator.WorkingEngine.TWO;
+        else
+            currentEngine = Elevator.WorkingEngine.FIVE;
+
+        if (capacityGroup.getCheckedRadioButtonId() == R.id.radio125kg)
+            currentCapacity = Elevator.WorkingCapacity.KG125;
+        else if (capacityGroup.getCheckedRadioButtonId() == R.id.radio225kg)
+            currentCapacity = Elevator.WorkingCapacity.KG225;
+        else
+            currentCapacity = Elevator.WorkingCapacity.KG350;
+
+        if (binding.addECustomerName.getText().toString().isEmpty()){
+            binding.addECustomerName.setError(emptyError);
+            createToast();
+            return;
+        }
+        if (binding.addECustomerSurname.getText().toString().isEmpty()){
+            binding.addECustomerSurname.setError(emptyError);
+            createToast();
+            return;
+        }
+        if (StaticFun.validateEmail(binding.addECustomerEmail.getText().toString()) && binding.addECustomerEmail.getText().toString().isEmpty()){
+            binding.addECustomerEmail.setError(emptyError);
+            createToast();
+            return;
+        }
+
+        if (binding.addECustomerPhone.getText().toString().isEmpty()){
+            binding.addECustomerPhone.setError(emptyError);
+            createToast();
+            return;
+        }
+
+        Customer customer =  new Customer(binding.addECustomerName.getText().toString(),
+                binding.addECustomerSurname.getText().toString(),
+                binding.addECustomerEmail.getText().toString(),
+                binding.addECustomerPhone.getText().toString());
+        Elevator elevator = new Elevator(serialEditT.getText().toString(),
+                spinner.getSelectedItem().toString(),
+                currentType,
+                currentPainting,
+                Double.valueOf(platformHeightEditT.getText().toString()),
+                Double.valueOf(platformWidthEditT.getText().toString()),
+                Double.valueOf(workHeightEditT.getText().toString()), currentEngine, currentCapacity, locationPoint);
+
+        uploadElevatorData(elevator,customer);
+    }
+
+
+    public void uploadElevatorData(Elevator elevator,Customer customer) {
         if (bitmaps.size() > 0) {
             binding.addESaveButton.setEnabled(false);
             binding.addEProgressBar.setVisibility(View.VISIBLE);
@@ -423,14 +484,14 @@ public class AddElevatorFragment extends Fragment {
                 } else {
                     reference.getDownloadUrl().addOnCompleteListener(task1 -> {
                         elevator.setPhotoURL2(task1.getResult().toString());
-                        layer.uploadElevatorData(elevator);
+                        layer.uploadElevatorData(elevator,customer);
                         binding.addEProgressBar.setVisibility(View.INVISIBLE);
                         binding.addESaveButton.setEnabled(true);
                         clearInputs();
                         Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
                     });
                 }
-                uploadElevatorData(elevator);
+                uploadElevatorData(elevator,customer);
             }).addOnProgressListener(snapshot -> {
                 double progress = (100 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
                 binding.addEProgressBar.setProgress((int) progress);
@@ -450,6 +511,10 @@ public class AddElevatorFragment extends Fragment {
         binding.addEHeightWorkEditText.setText("");
         binding.addESpinnerModels.setAdapter(null);
         binding.addELocationTextView.setText(R.string.location_information);
+        binding.addECustomerName.setText("");
+        binding.addECustomerSurname.setText("");
+        binding.addECustomerEmail.setText("");
+        binding.addECustomerPhone.setText("");
         locationPoint = null;
     }
 
