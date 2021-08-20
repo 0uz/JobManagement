@@ -96,8 +96,7 @@ public class MainPageFragment extends Fragment {
         elevatorList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+                NavHostFragment.findNavController(MainPageFragment.this).navigate(R.id.action_mainPageFragment_to_listElevatorFragment);
             }
         });
 

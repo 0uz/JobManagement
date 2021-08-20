@@ -47,7 +47,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
         holder.tv1.setText(services.get(position).getName()+" "+ services.get(position).getSurname());
         holder.tv2.setText(services.get(position).getEmail());
         holder.tv3.setText(StaticFun.getTimeData(services.get(position).getCreateTime()));
-        Log.d("perm",services.get(position).isBanned()+"");
         if (services.get(position).isBanned()){
             holder.switchBan.setChecked(true);
         }
@@ -64,7 +63,10 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
                 }
             }
         });
+
     }
+
+
 
     @Override
     public int getItemCount() {

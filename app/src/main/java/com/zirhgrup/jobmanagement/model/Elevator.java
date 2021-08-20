@@ -1,9 +1,10 @@
 package com.zirhgrup.jobmanagement.model;
 
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
-
-
+import java.util.Date;
+import java.util.List;
 
 
 public class Elevator {
@@ -13,15 +14,21 @@ public class Elevator {
     public enum WorkingEngine {TWO,FIVE}
     public enum WorkingCapacity{KG125,KG225,KG350}
 
-    String photoURL1, photoURL2;
-    String serialNo;
-    String elevatorInfo;
-    ElevatorType type;
-    PaintingType paintingType;
-    Double height,width,workHeight;
-    WorkingEngine motor;
-    WorkingCapacity capacity;
-    GeoPoint point;
+    private String photoURL1, photoURL2;
+    private String serialNo;
+    private String elevatorInfo;
+    private ElevatorType type;
+    private PaintingType paintingType;
+    private Double height,width,workHeight;
+    private WorkingEngine engine;
+    private WorkingCapacity capacity;
+    private GeoPoint point;
+    private long createTime;
+    private long nextMaintenanceTime;
+    @Exclude
+    private List<Maintenance> maintenances;
+    @Exclude
+    private Customer customer;
 
     public Elevator(String serialNo, String elevatorInfo, ElevatorType type, PaintingType paintingType, Double height, Double width, Double workHeight, WorkingEngine motor, WorkingCapacity capacity, GeoPoint point) {
         this.photoURL1 = photoURL1;
@@ -33,13 +40,40 @@ public class Elevator {
         this.height = height;
         this.width = width;
         this.workHeight = workHeight;
-        this.motor = motor;
+        this.engine = motor;
         this.capacity = capacity;
         this.point = point;
+        this.createTime = new Date().getTime();
+        this.nextMaintenanceTime = createTime + 7889229;
     }
 
     public Elevator() {
 
+    }
+
+    @Exclude
+    public Customer getCustomer() {
+        return customer;
+    }
+    @Exclude
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+    @Exclude
+    public List<Maintenance> getMaintenances() {
+        return maintenances;
+    }
+    @Exclude
+    public void setMaintenances(List<Maintenance> maintenances) {
+        this.maintenances = maintenances;
+    }
+
+    public long getNextMaintenanceTime() {
+        return nextMaintenanceTime;
+    }
+
+    public long getCreateTime() {
+        return createTime;
     }
 
     public String getElevatorInfo() {
@@ -70,8 +104,8 @@ public class Elevator {
         return workHeight;
     }
 
-    public WorkingEngine getMotor() {
-        return motor;
+    public WorkingEngine getEngine() {
+        return engine;
     }
 
     public WorkingCapacity getCapacity() {

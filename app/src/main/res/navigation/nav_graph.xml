@@ -10,6 +10,8 @@
                 app:destination="@id/addElevatorFragment"/>
         <action android:id="@+id/action_mainPageFragment_to_addUser" app:destination="@id/addUser"/>
         <action android:id="@+id/action_mainPageFragment_to_listUserFragment" app:destination="@id/listUserFragment"/>
+        <action android:id="@+id/action_mainPageFragment_to_listElevatorFragment"
+                app:destination="@id/listElevatorFragment"/>
     </fragment>
     <fragment android:id="@+id/addElevatorFragment" android:name="com.zirhgrup.jobmanagement.AddElevatorFragment"
               android:label="fragment_add_elevator" tools:layout="@layout/fragment_add_elevator">
@@ -25,4 +27,6 @@
     </fragment>
     <fragment android:id="@+id/listUserFragment" android:name="com.zirhgrup.jobmanagement.admin.ListUserFragment"
               android:label="fragment_list_user" tools:layout="@layout/fragment_list_user"/>
+    <fragment android:id="@+id/listElevatorFragment" android:name="com.zirhgrup.jobmanagement.ListElevatorFragment"
+              android:label="fragment_list_elevator" tools:layout="@layout/fragment_list_elevator"/>
 </navigation>

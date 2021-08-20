@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   xmlns:tools="http://schemas.android.com/tools"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:layout_marginBottom="16dp">
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="10dp" android:paddingRight="10dp"
+            android:paddingBottom="10dp" android:paddingTop="10dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" tools:srcCompat="@tools:sample/avatars"
+                    android:id="@+id/elevatorImageView"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout" android:layout_marginEnd="16dp"/>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/elevatorImageView"
+                    android:id="@+id/linearLayout"
+                    app:layout_constraintTop_toTopOf="parent">
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/serialNo"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/typeAndInfo"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/createDate"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/lastPeriodicMain"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/locationText"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                    android:id="@+id/linearLayout4">
+                <TextView
+                        android:text="@string/customer_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/customerName"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/customerMail"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/customerNumber"/>
+            </LinearLayout>
+            <TextView
+                    android:text="@string/details"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" android:id="@+id/detailsTV"
+                    app:layout_constraintTop_toBottomOf="@+id/elevatorImageView"
+                    app:layout_constraintStart_toStartOf="@+id/elevatorImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/elevatorImageView" android:gravity="center"
+                    android:layout_marginTop="2dp"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/detailsConstLayout"
+                android:visibility="gone">
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="10dp"
+                    android:id="@+id/linearLayout3">
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/paintType"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/platformSize"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/workingHeight"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout3" android:layout_marginStart="16dp">
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/engineNumber"
+                        android:layout_marginBottom="8dp"/>
+                <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/workingCap"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/maintenanceRecView"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

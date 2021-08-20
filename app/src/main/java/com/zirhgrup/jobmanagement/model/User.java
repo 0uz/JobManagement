@@ -11,6 +11,7 @@ public abstract class User {
     private String email;
     private String phoneNo;
 
+
     public User(String name, String surname, String email, String phoneNo) {
         this.name = name;
         this.surname = surname;

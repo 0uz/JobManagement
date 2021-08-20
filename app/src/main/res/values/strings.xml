@@ -54,6 +54,8 @@
     <string name="elevator_exist">Elevator exist with this serial ID</string>
     <string name="serial_lenght">Serial id have to 7 characters</string>
     <string name="serial_error">"Format must be : 14-1234 "</string>
+    <string name="customer_info">Customer Info</string>
+    <string name="details">Details</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>
