@@ -37,12 +37,15 @@
     <string name="ban_success">Banned successfully</string>
     <string name="unban_success">Unbanned successfully</string>
     <string name="workingCapacity">Working Capacity</string>
-    <string name="WorkingEngineNumber">Number of working engine</string>
-    <string name="WorkingHeight">Working Height (cm)</string>
+    <string name="workingEngineNumber">Number of working engine</string>
+    <string name="workingEngine">Working engine</string>
+    <string name="workingHeight">Working Height (cm)</string>
+    <string name="workingHeight2">Working Height</string>
     <string name="SelectPhoto">Select photo</string>
     <string name="Width">Width</string>
     <string name="height">Height</string>
     <string name="platformSize">Platform size (cm)</string>
+    <string name="platformSize2">Platform size</string>
     <string name="stainless_paint">Stainless paint</string>
     <string name="static_paint">Static paint</string>
     <string name="stairs_type">Stairs type</string>
@@ -52,10 +55,15 @@
     <string name="location_permission">Please check your location permissions</string>
     <string name="location_error">Please get elevator location</string>
     <string name="elevator_exist">Elevator exist with this serial ID</string>
-    <string name="serial_lenght">Serial id have to 7 characters</string>
+    <string name="serial_length">Serial id have to 7 characters</string>
     <string name="serial_error">"Format must be : 14-1234 "</string>
     <string name="customer_info">Customer Info</string>
     <string name="details">Details</string>
+    <string name="createTime">Create Time</string>
+    <string name="lastPeriodic">Last maintenance</string>
+    <string name="paintType">Paint type</string>
+    <string name="serviceInfo">Service Information</string>
+    <string name="notExistUser">"There does not exist user "</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>

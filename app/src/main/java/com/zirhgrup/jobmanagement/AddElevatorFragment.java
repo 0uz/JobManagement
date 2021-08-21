@@ -24,16 +24,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.storage.StorageReference;
@@ -41,6 +38,8 @@ import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 import com.zirhgrup.jobmanagement.databinding.FragmentAddElevatorBinding;
 import com.zirhgrup.jobmanagement.model.Customer;
 import com.zirhgrup.jobmanagement.model.Elevator;
+import com.zirhgrup.jobmanagement.model.Service;
+import com.zirhgrup.jobmanagement.model.User;
 import com.zirhgrup.jobmanagement.tools.StaticFun;
 
 import java.io.ByteArrayOutputStream;
@@ -53,19 +52,11 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class AddElevatorFragment extends Fragment {
 
-    ImageView imageView;
-    TextView locationTV;
+
     TextView[] textViews = new TextView[2];
     List<Bitmap> bitmaps = new ArrayList<>();
-    RadioGroup typeGroup, paintingGroup, engineGroup, capacityGroup;
-    TextInputEditText serialEditT, platformHeightEditT, platformWidthEditT, workHeightEditT;
-    Button save, photoUpload, location;
-    RadioButton horizontalType, stairsType;
-    Spinner spinner;
-    FusedLocationProviderClient fusedLocationProviderClient;
     GeoPoint locationPoint;
     DatabaseLayer layer;
-    FragmentManager fragmentManager;
     private FragmentAddElevatorBinding binding;
     private int currentImage = 0;
 
@@ -114,12 +105,12 @@ public class AddElevatorFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }
-                            imageView.setImageBitmap(bitmaps.get(0));
+                            binding.addEImageview.setImageBitmap(bitmaps.get(0));
 
                             for (TextView t : textViews) {
                                 t.setVisibility(View.VISIBLE);
                             }
-                            imageView.setVisibility(View.VISIBLE);
+                            binding.addEImageview.setVisibility(View.VISIBLE);
                             binding.addERotateButton.setVisibility(View.VISIBLE);
 
                         }catch (NullPointerException e){
@@ -200,47 +191,30 @@ public class AddElevatorFragment extends Fragment {
         liveData.observe(getViewLifecycleOwner(), new Observer<LatLng>() {
             @Override
             public void onChanged(LatLng data) {
-                locationTV.setText(data.latitude + "N\n" + data.longitude + "E");
+                binding.addELocationTextView.setText(data.latitude + "N\n" + data.longitude + "E");
                 locationPoint = new GeoPoint(data.latitude, data.longitude);
 
             }
         });
 
-        photoUpload = view.findViewById(R.id.addE_photo_button);
-        save = view.findViewById(R.id.addE_saveButton);
-        location = view.findViewById(R.id.addE_locationButton);
-
-        imageView = view.findViewById(R.id.addE_imageview);
         textViews[0] = view.findViewById(R.id.addE_TextView1);
         textViews[1] = view.findViewById(R.id.addE_TextView2);
-        locationTV = view.findViewById(R.id.addE_locationTextView);
 
 
-        typeGroup = view.findViewById(R.id.addE_typeRadioGroup);
-        paintingGroup = view.findViewById(R.id.addE_paintingRadioGroup);
-        engineGroup = view.findViewById(R.id.addE_EngineRadioGroup);
-        capacityGroup = view.findViewById(R.id.addE_capacityRadioGroup);
-
-        spinner = view.findViewById(R.id.addE_spinnerModels);
 
 
-        serialEditT = view.findViewById(R.id.addE_serialEditText);
-        platformHeightEditT = view.findViewById(R.id.addE_heightPlatformEditText);
-        platformWidthEditT = view.findViewById(R.id.addE_widthPlatformEditText);
-        workHeightEditT = view.findViewById(R.id.addE_heightWorkEditText);
 
-
-        location.setOnClickListener(new View.OnClickListener() {
+        binding.addELocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPermissionResult.launch(ACCESS_FINE_LOCATION);
             }
         });
 
-        typeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        binding.addETypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                selectSpinnerType(spinner, checkedId);
+                selectSpinnerType(binding.addESpinnerModels, checkedId);
             }
         });
 
@@ -272,7 +246,7 @@ public class AddElevatorFragment extends Fragment {
                     }
                 }
                 if (count<7){
-                    binding.addESerialEditText.setError(getString(R.string.serial_lenght));
+                    binding.addESerialEditText.setError(getString(R.string.serial_length));
                 }
 
 
@@ -284,7 +258,7 @@ public class AddElevatorFragment extends Fragment {
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
+        binding.addESaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (binding.addESerialEditText.getText().toString().isEmpty()){
@@ -292,14 +266,14 @@ public class AddElevatorFragment extends Fragment {
                     return;
                 }
                 if (binding.addESerialEditText.getText().toString().length() < 7){
-                    Toast.makeText(getContext(), getString(R.string.serial_lenght), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.serial_length), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 DatabaseLayer.getDb().collection("elevators").document(binding.addESerialEditText.getText().toString()).get().
                         addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.getResult().exists()&&binding.addESerialEditText.getError().length()==0){
+                                if (task.getResult().exists()&&binding.addESerialEditText.getError()==null){
                                     Toast.makeText(getContext(), getString(R.string.elevator_exist), Toast.LENGTH_SHORT).show();
                                 }else{
                                     checkFields();
@@ -312,7 +286,7 @@ public class AddElevatorFragment extends Fragment {
         });
 
 
-        photoUpload.setOnClickListener(new View.OnClickListener() {
+        binding.addEPhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectPhotosFromGallery();
@@ -322,7 +296,7 @@ public class AddElevatorFragment extends Fragment {
         textViews[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageView.setImageBitmap(bitmaps.get(0));
+                binding.addEImageview.setImageBitmap(bitmaps.get(0));
                 currentImage = 0;
             }
         });
@@ -330,7 +304,7 @@ public class AddElevatorFragment extends Fragment {
         textViews[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageView.setImageBitmap(bitmaps.get(1));
+                binding.addEImageview.setImageBitmap(bitmaps.get(1));
                 currentImage = 1;
             }
         });
@@ -339,64 +313,66 @@ public class AddElevatorFragment extends Fragment {
     void checkFields(){
         String emptyError = getResources().getString(R.string.empty);
         if (bitmaps.size() == 0) {
-            photoUpload.setError("Please upload photo");
-            createTimerButtonError(photoUpload, "Please upload photo");
+            binding.addEPhotoButton.setError("Please upload photo");
+            createTimerButtonError(binding.addEPhotoButton, "Please upload photo");
             createToast();
             return;
         }
 
-        if (serialEditT.getText().toString().isEmpty() && serialEditT.getText().toString().length() < 7) {
-            serialEditT.setError(emptyError);
+        if (binding.addESerialEditText.getText().toString().isEmpty() && binding.addESerialEditText.getText().toString().length() < 7) {
+            binding.addESerialEditText.setError(emptyError);
             createToast();
             return;
         }
 
 
 
-        if (typeGroup.getCheckedRadioButtonId() == -1) {
+        if (binding.addETypeRadioGroup.getCheckedRadioButtonId() == -1) {
             createTimerRadioError(binding.radioStairsType, emptyError);
             createToast();
             return;
         }
 
-        if (paintingGroup.getCheckedRadioButtonId() == -1) {
+        if (binding.addEPaintingRadioGroup.getCheckedRadioButtonId() == -1) {
             createTimerRadioError(binding.radioStainlessPainting, emptyError);
             createToast();
             return;
         }
 
-        if (platformHeightEditT.getText().toString().isEmpty()) {
-            platformHeightEditT.setError(emptyError);
+        if (binding.addEHeightPlatformEditText.getText().toString().isEmpty()) {
+            binding.addEHeightPlatformEditText.setError(emptyError);
             createToast();
             return;
         }
 
-        if (platformWidthEditT.getText().toString().isEmpty()) {
-            platformWidthEditT.setError(emptyError);
+        if (binding.addEWidthPlatformEditText.getText().toString().isEmpty()) {
+            binding.addEWidthPlatformEditText.setError(emptyError);
             createToast();
             return;
         }
 
-        if (workHeightEditT.getText().toString().isEmpty()) {
-            workHeightEditT.setError(emptyError);
+
+        if (binding.addEHeightWorkEditText.getText().toString().isEmpty()) {
+            binding.addEHeightWorkEditText.setError(emptyError);
+
             createToast();
             return;
         }
 
-        if (engineGroup.getCheckedRadioButtonId() == -1) {
+        if (binding.addEEngineRadioGroup.getCheckedRadioButtonId() == -1) {
             createTimerRadioError(binding.radioFiveEngine, emptyError);
             createToast();
             return;
         }
 
-        if (capacityGroup.getCheckedRadioButtonId() == -1) {
+        if (binding.addECapacityRadioGroup.getCheckedRadioButtonId() == -1) {
             createTimerRadioError(binding.radio350kg, emptyError);
             createToast();
             return;
         }
 
         if (locationPoint == null) {
-            createTimerButtonError(location, getString(R.string.location_error));
+            createTimerButtonError(binding.addELocationButton, getString(R.string.location_error));
             createToast();
         }
 
@@ -404,24 +380,24 @@ public class AddElevatorFragment extends Fragment {
         Elevator.PaintingType currentPainting;
         Elevator.WorkingEngine currentEngine;
         Elevator.WorkingCapacity currentCapacity;
-        if (typeGroup.getCheckedRadioButtonId() == R.id.radioHorizontalType)
+        if (binding.addETypeRadioGroup.getCheckedRadioButtonId() == R.id.radioHorizontalType)
             currentType = Elevator.ElevatorType.HORIZONTAL;
         else
             currentType = Elevator.ElevatorType.STAIRS;
 
-        if (paintingGroup.getCheckedRadioButtonId() == R.id.radioStaticPainting)
+        if (binding.addEPaintingRadioGroup.getCheckedRadioButtonId() == R.id.radioStaticPainting)
             currentPainting = Elevator.PaintingType.STATIC;
         else
             currentPainting = Elevator.PaintingType.STAINLESS;
 
-        if (engineGroup.getCheckedRadioButtonId() == R.id.radioTwoEngine)
+        if (binding.addEEngineRadioGroup.getCheckedRadioButtonId() == R.id.radioTwoEngine)
             currentEngine = Elevator.WorkingEngine.TWO;
         else
             currentEngine = Elevator.WorkingEngine.FIVE;
 
-        if (capacityGroup.getCheckedRadioButtonId() == R.id.radio125kg)
+        if (binding.addECapacityRadioGroup.getCheckedRadioButtonId() == R.id.radio125kg)
             currentCapacity = Elevator.WorkingCapacity.KG125;
-        else if (capacityGroup.getCheckedRadioButtonId() == R.id.radio225kg)
+        else if (binding.addECapacityRadioGroup.getCheckedRadioButtonId() == R.id.radio225kg)
             currentCapacity = Elevator.WorkingCapacity.KG225;
         else
             currentCapacity = Elevator.WorkingCapacity.KG350;
@@ -447,18 +423,17 @@ public class AddElevatorFragment extends Fragment {
             createToast();
             return;
         }
-
         Customer customer =  new Customer(binding.addECustomerName.getText().toString(),
                 binding.addECustomerSurname.getText().toString(),
                 binding.addECustomerEmail.getText().toString(),
                 binding.addECustomerPhone.getText().toString());
-        Elevator elevator = new Elevator(serialEditT.getText().toString(),
-                spinner.getSelectedItem().toString(),
+        Elevator elevator = new Elevator(binding.addESerialEditText.getText().toString(),
+                binding.addESpinnerModels.getSelectedItem().toString(),
                 currentType,
                 currentPainting,
-                Double.valueOf(platformHeightEditT.getText().toString()),
-                Double.valueOf(platformWidthEditT.getText().toString()),
-                Double.valueOf(workHeightEditT.getText().toString()), currentEngine, currentCapacity, locationPoint);
+                Double.valueOf(binding.addEHeightPlatformEditText.getText().toString()),
+                Double.valueOf(binding.addEWidthPlatformEditText.getText().toString()),
+                Double.valueOf(binding.addEHeightWorkEditText.getText().toString()), currentEngine, currentCapacity, locationPoint, DatabaseLayer.getmAuth().getCurrentUser().getEmail());
 
         uploadElevatorData(elevator,customer);
     }
@@ -499,6 +474,8 @@ public class AddElevatorFragment extends Fragment {
         }
 
     }
+
+
 
     private void clearInputs() {
         binding.addESerialEditText.setText("");

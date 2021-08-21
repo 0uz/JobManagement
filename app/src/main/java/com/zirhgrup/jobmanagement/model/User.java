@@ -1,6 +1,6 @@
 package com.zirhgrup.jobmanagement.model;
 
-public abstract class User {
+public class User {
     public enum Role{
         ADMIN,
         SERVICE,
@@ -10,16 +10,22 @@ public abstract class User {
     private String surname;
     private String email;
     private String phoneNo;
+    private Role role;
 
 
-    public User(String name, String surname, String email, String phoneNo) {
+    public User(String name, String surname, String email, String phoneNo, Role role) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNo = phoneNo;
+        this.role = role;
     }
 
     public User() {
+    }
+
+    public Role getRole() {
+        return role;
     }
 
     public String getName() {

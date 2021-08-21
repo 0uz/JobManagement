@@ -21,5 +21,10 @@ public class StaticFun {
         return new SimpleDateFormat("dd-MM-yyyy").format(date);
     }
 
+    public static int doubleToInt(double x){
+        return (int) x;
+    }
+
+
 
 }

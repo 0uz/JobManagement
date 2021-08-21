@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,13 +25,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.collect.Maps;
 
 
 public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, OnMapReadyCallback {
 
 
-    private Marker marker;
+    private Marker mMarker;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private final LatLng mDefaultLocation = new LatLng(39.96701788567862, 32.9042233979418);
@@ -63,11 +61,10 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle result = new Bundle();
-                result.putParcelable("location",location);
-                Log.d("location",location.latitude+"");
+                location = mMarker.getPosition();
+                Log.d("MARKER", mMarker.getPosition().toString());
                 NavController navController = NavHostFragment.findNavController(MapsFragment.this);
-                navController.getPreviousBackStackEntry().getSavedStateHandle().set("location",location);
+                navController.getPreviousBackStackEntry().getSavedStateHandle().set("location", mMarker.getPosition());
                 navController.popBackStack();
 
             }
@@ -77,17 +74,15 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
     @Override
     public boolean onMyLocationButtonClick() {
         Toast.makeText(getContext(), "Location set", Toast.LENGTH_SHORT).show();
-        marker.remove();
+        mMarker.remove();
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
-        marker = mMap.addMarker(new MarkerOptions().position(location).draggable(true));
+        mMarker = mMap.addMarker(new MarkerOptions().position(location).draggable(true));
         return false;
     }
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
         this.location = new LatLng(location.getLatitude(),location.getLongitude());
-        Toast.makeText(getContext(), "Current location saved !", Toast.LENGTH_LONG).show();
-
     }
 
     private void getDeviceLocation() {
@@ -97,11 +92,11 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
                 public void onComplete(@NonNull Task<Location> task) {
                     if (task.isSuccessful()) {
                         location = new LatLng(task.getResult().getLatitude(),task.getResult().getLongitude());
-                        marker = mMap.addMarker(new MarkerOptions().position(location).draggable(true));
+                        mMarker = mMap.addMarker(new MarkerOptions().position(location).draggable(true));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
                     } else {
                         Log.d("LOCATION", "Current location is null. Using defaults.");
-                        marker = mMap.addMarker(new MarkerOptions().position(mDefaultLocation).draggable(true));
+                        mMarker = mMap.addMarker(new MarkerOptions().position(mDefaultLocation).draggable(true));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
                     }
                 }
@@ -121,6 +116,22 @@ public class MapsFragment extends Fragment implements GoogleMap.OnMyLocationButt
         googleMap.setOnMyLocationButtonClickListener(this);
         googleMap.setOnMyLocationClickListener(this);
         getDeviceLocation();
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+                mMarker = marker;
+            }
+        });
 
     }
 }

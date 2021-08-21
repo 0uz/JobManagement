@@ -29,10 +29,11 @@ public class Elevator {
     private List<Maintenance> maintenances;
     @Exclude
     private Customer customer;
+    @Exclude
+    private User ownerData;
+    private String owner;
 
-    public Elevator(String serialNo, String elevatorInfo, ElevatorType type, PaintingType paintingType, Double height, Double width, Double workHeight, WorkingEngine motor, WorkingCapacity capacity, GeoPoint point) {
-        this.photoURL1 = photoURL1;
-        this.photoURL2 = photoURL2;
+    public Elevator(String serialNo, String elevatorInfo, ElevatorType type, PaintingType paintingType, Double height, Double width, Double workHeight, WorkingEngine motor, WorkingCapacity capacity, GeoPoint point, String user) {
         this.serialNo = serialNo;
         this.elevatorInfo = elevatorInfo;
         this.type = type;
@@ -43,12 +44,27 @@ public class Elevator {
         this.engine = motor;
         this.capacity = capacity;
         this.point = point;
+        this.owner = user;
         this.createTime = new Date().getTime();
         this.nextMaintenanceTime = createTime + 7889229;
     }
 
     public Elevator() {
 
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+
+    @Exclude
+    public User getOwnerData() {
+        return ownerData;
+    }
+    @Exclude
+    public void setOwnerData(User ownerData) {
+        this.ownerData = ownerData;
     }
 
     @Exclude
@@ -130,5 +146,21 @@ public class Elevator {
 
     public void setPhotoURL2(String photoURL2) {
         this.photoURL2 = photoURL2;
+    }
+
+    public String formatType(){
+        return type.toString().substring(0,1) + type.toString().substring(1).toLowerCase();
+    }
+    public String formatPainting(){
+        return paintingType.toString().substring(0,1) + paintingType.toString().substring(1).toLowerCase();
+    }
+    public String formatEngine(){
+        if (engine == WorkingEngine.TWO) return "2";
+        else return "5";
+    }
+    public String formatCapacity(){
+        if (capacity == WorkingCapacity.KG125) return "125kg";
+        else if(capacity == WorkingCapacity.KG225) return "225kg";
+        else return "350kg";
     }
 }

@@ -33,11 +33,13 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
     static private FirebaseFirestore db;
     FirebaseStorage storage;
     private static Set<DatabaseLayer> databaseLayers = new HashSet<DatabaseLayer>();
+    private User currentUser;
 
     public DatabaseLayer() {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+
     }
 
     public static DatabaseLayer createDatabase(){
@@ -64,7 +66,11 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         db.collection("users").document(mail).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                login(context,documentSnapshot.getString("role"),documentSnapshot.getBoolean("banned"),mail,password);
+                if (documentSnapshot.exists()){
+                    login(context,documentSnapshot.getString("role"),documentSnapshot.getBoolean("banned"),mail,password);
+                }else{
+                    Toast.makeText(context, context.getString(R.string.notExistUser), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -80,15 +86,27 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     if (role.equals("ADMIN")){
-                        Intent i = new Intent(activity, MainActivity.class);
-                        activity.startActivity(i);
-                        ((AppCompatActivity) activity).finish();
+
                     }else{
                         //TODO service
                     }
+                    Intent i = new Intent(activity, MainActivity.class);
+                    activity.startActivity(i);
+                    ((AppCompatActivity) activity).finish();
+                    getCurrentUserData();
                 }else{
                     Toast.makeText(activity, activity.getResources().getText(R.string.login_error), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+
+    void getCurrentUserData(){
+        db.collection("users").document(mAuth.getCurrentUser().getEmail()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                currentUser = documentSnapshot.toObject(User.class);
             }
         });
     }
@@ -143,13 +161,9 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         }
     }
 
-
-
-
-
-
-
-
+    public User getCurrentUser() {
+        return currentUser;
+    }
 
     public static FirebaseAuth getmAuth() {
         return mAuth;

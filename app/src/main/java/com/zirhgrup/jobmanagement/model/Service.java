@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 public class Service extends User {
-    private Role role;
     private boolean isBanned;
     private long createTime;
 
@@ -18,15 +17,12 @@ public class Service extends User {
     }
 
     public Service(String name, String surname, String email, String phoneNo, boolean isBanned) {
-        super(name, surname, email, phoneNo);
+        super(name, surname, email, phoneNo,Role.SERVICE);
         this.isBanned = isBanned;
         this.createTime = new Date().getTime();
-        role = Role.SERVICE;
+
     }
 
-    public Role getRole() {
-        return role;
-    }
 
     public void setBanned(boolean banned) {
         isBanned = banned;
