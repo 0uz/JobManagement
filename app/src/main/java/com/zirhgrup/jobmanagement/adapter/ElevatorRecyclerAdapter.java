@@ -71,16 +71,18 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
         holder.serviceNumber.setText(elevator.get(position).getOwnerData().getPhoneNo());
         holder.serviceMail.setText(elevator.get(position).getOwnerData().getEmail());
 
-        Picasso.get().load(elevator.get(position).getPhotoURL1()).resize(300, 400).into(holder.imageView);
+        Picasso.get().load(elevator.get(position).getPhotoURL1()).fit().centerCrop().placeholder(R.drawable.elevator_ph).into(holder.imageView);
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (currentPhoto == 0) {
-                    Picasso.get().load(elevator.get(position).getPhotoURL2()).resize(300, 400).into(holder.imageView);
+//                    Picasso.get().load(elevator.get(position).getPhotoURL2()).resize(300, 400).into(holder.imageView);
+                    Picasso.get().load(elevator.get(position).getPhotoURL2()).fit().centerCrop().placeholder(R.drawable.elevator_ph).into(holder.imageView);
                     currentPhoto = 1;
                 } else {
-                    Picasso.get().load(elevator.get(position).getPhotoURL1()).resize(300, 400).into(holder.imageView);
+//                    Picasso.get().load(elevator.get(position).getPhotoURL1()).resize(300, 400).into(holder.imageView);
+                    Picasso.get().load(elevator.get(position).getPhotoURL1()).fit().centerCrop().placeholder(R.drawable.elevator_ph).into(holder.imageView);
                     currentPhoto = 0;
                 }
             }
