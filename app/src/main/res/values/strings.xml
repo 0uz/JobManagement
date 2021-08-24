@@ -64,6 +64,9 @@
     <string name="paintType">Paint type</string>
     <string name="serviceInfo">Service Information</string>
     <string name="notExistUser">"There does not exist user "</string>
+    <string name="job_description">Job Description</string>
+    <string name="changed_parts">Changed Parts</string>
+    <string name="add_part">Add Part</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>

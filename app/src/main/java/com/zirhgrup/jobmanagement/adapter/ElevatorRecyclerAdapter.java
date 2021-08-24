@@ -5,10 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,6 +21,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
+import com.zirhgrup.jobmanagement.AddElevatorFragment;
+import com.zirhgrup.jobmanagement.ListElevatorFragment;
 import com.zirhgrup.jobmanagement.R;
 import com.zirhgrup.jobmanagement.model.Elevator;
 import com.zirhgrup.jobmanagement.model.User;
@@ -27,16 +31,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.Date;
 import java.util.List;
 
 public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecyclerAdapter.ElevatorViewHolder> {
     Context context;
     List<Elevator> elevator;
+    ListElevatorFragment fragment;
 
-
-    public ElevatorRecyclerAdapter(Context context, List<Elevator> elevator) {
+    public ElevatorRecyclerAdapter(Context context, List<Elevator> elevator , ListElevatorFragment fragment) {
         this.context = context;
         this.elevator = elevator;
+        this.fragment = fragment;
     }
 
     @NonNull
@@ -98,6 +104,21 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
             }
         });
 
+        long now = new Date().getTime();
+        if (elevator.get(position).getNextMaintenanceTime() <= now){
+            holder.maintenanceButton.setText("Add Periodic\nMaintenance");
+        }else{
+            holder.maintenanceButton.setText("Add Custom\nMaintenance");
+        }
+
+        holder.maintenanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(fragment).navigate(R.id.action_listElevatorFragment_to_addMaintenanceFragment);
+
+            }
+        });
+
     }
 
     private void getLocationData(double latitude, double longitude, TextView textView) {
@@ -137,6 +158,7 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
         RecyclerView maintenance;
         ImageView imageView;
         ConstraintLayout detailsLayout;
+        Button maintenanceButton;
 
         public ElevatorViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -157,6 +179,7 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
             serviceName = itemView.findViewById(R.id.serviceName);
             serviceNumber = itemView.findViewById(R.id.serviceNumber);
             serviceMail = itemView.findViewById(R.id.serviceMail);
+            maintenanceButton = itemView.findViewById(R.id.maintenanceButton);
 
             imageView = itemView.findViewById(R.id.elevatorImageView);
             details = itemView.findViewById(R.id.detailsTV);

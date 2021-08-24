@@ -33,6 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/listUserButton"
         />
+        <Button
+                android:text="Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/testButton"/>
     </LinearLayout>
     <Button
             android:text="@string/button_logout"

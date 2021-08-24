@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Maintenance {
-    private enum MaintenanceType{PERIODIC,BREAKDOWN}
+    private enum MaintenanceType{PERIODIC,CUSTOM}
     private long createTime;
     private MaintenanceType type;
     private String ownerServiceEmail;

@@ -33,6 +33,8 @@ public class MainPageFragment extends Fragment {
     static DatabaseLayer layer;
     private FragmentMainPageBinding binding;
 
+
+
     public MainPageFragment() {
         // Required empty public constructor
     }
@@ -65,10 +67,7 @@ public class MainPageFragment extends Fragment {
         layer = DatabaseLayer.createDatabase();
         layer.checkCurrentUser(getContext());
 
-        Button addElevator = view.findViewById(R.id.addElevatorButton);
-        Button addUser = view.findViewById(R.id.addUserButton);
-        Button elevatorList = view.findViewById(R.id.elevatorListButton);
-        Button logout = view.findViewById(R.id.logoutButton);
+
 
 
         binding.listUserButton.setOnClickListener(new View.OnClickListener() {
@@ -78,14 +77,14 @@ public class MainPageFragment extends Fragment {
             }
         });
 
-        addElevator.setOnClickListener(new View.OnClickListener() {
+        binding.addElevatorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NavHostFragment.findNavController(MainPageFragment.this).navigate(R.id.action_mainPageFragment_to_addElevatorFragment);
             }
         });
 
-        addUser.setOnClickListener(new View.OnClickListener() {
+        binding.addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NavHostFragment.findNavController(MainPageFragment.this).navigate(R.id.action_mainPageFragment_to_addUser);
@@ -93,19 +92,33 @@ public class MainPageFragment extends Fragment {
             }
         });
 
-        elevatorList.setOnClickListener(new View.OnClickListener() {
+        binding.elevatorListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NavHostFragment.findNavController(MainPageFragment.this).navigate(R.id.action_mainPageFragment_to_listElevatorFragment);
             }
         });
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        binding.logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 layer.signOut(getContext());
                 Intent i =  new Intent(getContext(),LoginActivity.class);
                 startActivity(i);
+            }
+        });
+
+        binding.testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseLayer.getDb().collection("elevators").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot data : queryDocumentSnapshots.getDocuments()){
+                            Log.d("data",data.toString());
+                        }
+                    }
+                });
             }
         });
 

@@ -28,5 +28,10 @@
     <fragment android:id="@+id/listUserFragment" android:name="com.zirhgrup.jobmanagement.admin.ListUserFragment"
               android:label="fragment_list_user" tools:layout="@layout/fragment_list_user"/>
     <fragment android:id="@+id/listElevatorFragment" android:name="com.zirhgrup.jobmanagement.ListElevatorFragment"
-              android:label="fragment_list_elevator" tools:layout="@layout/fragment_list_elevator"/>
+              android:label="fragment_list_elevator" tools:layout="@layout/fragment_list_elevator">
+        <action android:id="@+id/action_listElevatorFragment_to_addMaintenanceFragment"
+                app:destination="@id/addMaintenanceFragment"/>
+    </fragment>
+    <fragment android:id="@+id/addMaintenanceFragment" android:name="com.zirhgrup.jobmanagement.AddMaintenanceFragment"
+              android:label="fragment_add_maintenance" tools:layout="@layout/fragment_add_maintenance"/>
 </navigation>
