@@ -25,7 +25,6 @@ public class Elevator {
     private GeoPoint point;
     private long createTime;
     private long nextMaintenanceTime;
-    @Exclude
     private List<Maintenance> maintenances;
     @Exclude
     private Customer customer;
@@ -45,7 +44,7 @@ public class Elevator {
         this.capacity = capacity;
         this.point = point;
         this.owner = user;
-        this.createTime = new Date().getTime();
+        this.createTime = new Date().getTime()/1000;
         this.nextMaintenanceTime = createTime + 7889229;
     }
 
@@ -75,14 +74,16 @@ public class Elevator {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-    @Exclude
+
+    //TODO TEST
     public List<Maintenance> getMaintenances() {
         return maintenances;
     }
-    @Exclude
+
     public void setMaintenances(List<Maintenance> maintenances) {
         this.maintenances = maintenances;
     }
+
 
     public long getNextMaintenanceTime() {
         return nextMaintenanceTime;

@@ -40,6 +40,9 @@ public class DatabaseLayer implements OnCompleteListener<QuerySnapshot> {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(true).build();
+        db.setFirestoreSettings(settings);
+
     }
 
     public static DatabaseLayer createDatabase(){

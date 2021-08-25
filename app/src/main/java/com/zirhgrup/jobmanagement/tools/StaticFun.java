@@ -17,7 +17,7 @@ public class StaticFun {
     }
 
     public static String getTimeData(long timestamp) {
-        Date date = new Timestamp(timestamp);
+        Date date = new Timestamp(timestamp*1000);
         return new SimpleDateFormat("dd-MM-yyyy").format(date);
     }
 

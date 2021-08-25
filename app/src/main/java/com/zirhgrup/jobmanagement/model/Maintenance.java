@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Maintenance {
-    private enum MaintenanceType{PERIODIC,CUSTOM}
+    public enum MaintenanceType{PERIODIC,CUSTOM}
     private long createTime;
     private MaintenanceType type;
     private String ownerServiceEmail;
@@ -39,25 +39,5 @@ public class Maintenance {
         return changedParts;
     }
 
-    public class Part{
-        private String partName;
-        private String jobExplanation;
 
-        public Part(String partName, String jobExplanation) {
-            this.partName = partName;
-            this.jobExplanation = jobExplanation;
-        }
-
-        public Part() {
-        }
-
-        public String getPartName() {
-            return partName;
-        }
-
-        public String getJobExplanation() {
-            return jobExplanation;
-        }
-    }
 }
-

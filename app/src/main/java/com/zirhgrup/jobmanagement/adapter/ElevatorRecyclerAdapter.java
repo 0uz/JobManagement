@@ -1,6 +1,7 @@
 package com.zirhgrup.jobmanagement.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,9 @@ import com.squareup.picasso.Picasso;
 import com.zirhgrup.jobmanagement.AddElevatorFragment;
 import com.zirhgrup.jobmanagement.ListElevatorFragment;
 import com.zirhgrup.jobmanagement.R;
+import com.zirhgrup.jobmanagement.database.DatabaseLayer;
 import com.zirhgrup.jobmanagement.model.Elevator;
+import com.zirhgrup.jobmanagement.model.Maintenance;
 import com.zirhgrup.jobmanagement.model.User;
 import com.zirhgrup.jobmanagement.tools.StaticFun;
 import org.json.JSONException;
@@ -83,11 +86,9 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
             @Override
             public void onClick(View v) {
                 if (currentPhoto == 0) {
-//                    Picasso.get().load(elevator.get(position).getPhotoURL2()).resize(300, 400).into(holder.imageView);
                     Picasso.get().load(elevator.get(position).getPhotoURL2()).fit().centerCrop().placeholder(R.drawable.elevator_ph).into(holder.imageView);
                     currentPhoto = 1;
                 } else {
-//                    Picasso.get().load(elevator.get(position).getPhotoURL1()).resize(300, 400).into(holder.imageView);
                     Picasso.get().load(elevator.get(position).getPhotoURL1()).fit().centerCrop().placeholder(R.drawable.elevator_ph).into(holder.imageView);
                     currentPhoto = 0;
                 }
@@ -114,7 +115,18 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
         holder.maintenanceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavHostFragment.findNavController(fragment).navigate(R.id.action_listElevatorFragment_to_addMaintenanceFragment);
+                Bundle bundle = new Bundle();
+                bundle.putString("user",DatabaseLayer.getmAuth().getCurrentUser().getEmail());
+                bundle.putString("serial",elevator.get(position).getSerialNo());
+                if (elevator.get(position).getNextMaintenanceTime() <= now){
+                    bundle.putString("type","periodic");
+                    bundle.putLong("maintenance",elevator.get(position).getNextMaintenanceTime());
+                    NavHostFragment.findNavController(fragment).navigate(R.id.action_listElevatorFragment_to_addMaintenanceFragment,bundle);
+                }else{
+                    bundle.putString("type","custom");
+                    NavHostFragment.findNavController(fragment).navigate(R.id.action_listElevatorFragment_to_addMaintenanceFragment,bundle);
+                }
+
 
             }
         });
