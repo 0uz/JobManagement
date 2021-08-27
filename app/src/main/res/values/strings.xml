@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Job Management</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ElevatorListButton">Elevator list</string>
     <string name="prompt_email">Email</string>
     <string name="button_login">Login</string>
@@ -72,6 +71,12 @@
     <string name="error_charLength">Must be at least</string>
     <string name="delete">Delete</string>
     <string name="error">Something went wrong</string>
+    <string name="customMaintenance">Custom Maintenance</string>
+    <string name="periodicMaintenance">Periodic</string>
+    <string name="type">Type</string>
+    <string name="date">Date</string>
+    <string name="owner">Owner</string>
+    <string name="maintenances">Maintenances</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>

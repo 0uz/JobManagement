@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -106,7 +107,7 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
         });
 
         long now = new Date().getTime();
-        if (elevator.get(position).getNextMaintenanceTime() <= now){
+        if (elevator.get(position).getNextMaintenanceTime() <= (now/1000)){
             holder.maintenanceButton.setText("Add Periodic\nMaintenance");
         }else{
             holder.maintenanceButton.setText("Add Custom\nMaintenance");
@@ -131,6 +132,22 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
             }
         });
 
+        holder.changedPartsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.maintenance.getVisibility() == View.GONE){
+                    holder.maintenance.setVisibility(View.VISIBLE);
+                }else{
+                    holder.maintenance.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        if (elevator.get(position).getMaintenances() != null){
+            MaintenanceRecyclerAdapter adapter =  new MaintenanceRecyclerAdapter(context,elevator.get(position).getMaintenances());
+            holder.maintenance.setAdapter(adapter);
+            holder.maintenance.setLayoutManager(new LinearLayoutManager(context));
+        }
     }
 
     private void getLocationData(double latitude, double longitude, TextView textView) {
@@ -166,6 +183,7 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
         TextView serialNo, typeAndInfo, createDate, lastPeriodicMain, locationText, paintType, engineNumber, platformSize, workingHeight, workingCap;
         TextView customerName, customerMail, customerNumber;
         TextView serviceName, serviceNumber, serviceMail;
+        TextView changedPartsButton;
         TextView details;
         RecyclerView maintenance;
         ImageView imageView;
@@ -187,6 +205,7 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
             customerName = itemView.findViewById(R.id.customerName);
             customerMail = itemView.findViewById(R.id.customerMail);
             customerNumber = itemView.findViewById(R.id.customerNumber);
+            changedPartsButton = itemView.findViewById(R.id.changedPartButton);
 
             serviceName = itemView.findViewById(R.id.serviceName);
             serviceNumber = itemView.findViewById(R.id.serviceNumber);

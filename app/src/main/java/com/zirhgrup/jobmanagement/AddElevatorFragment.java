@@ -426,7 +426,8 @@ public class AddElevatorFragment extends Fragment {
         Customer customer =  new Customer(binding.addECustomerName.getText().toString(),
                 binding.addECustomerSurname.getText().toString(),
                 binding.addECustomerEmail.getText().toString(),
-                binding.addECustomerPhone.getText().toString());
+                binding.addECustomerPhone.getText().toString(),
+                binding.addESerialEditText.getText().toString());
         Elevator elevator = new Elevator(binding.addESerialEditText.getText().toString(),
                 binding.addESpinnerModels.getSelectedItem().toString(),
                 currentType,

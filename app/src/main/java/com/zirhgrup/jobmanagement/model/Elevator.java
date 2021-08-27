@@ -1,23 +1,23 @@
 package com.zirhgrup.jobmanagement.model;
 
+import androidx.room.*;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.GeoPoint;
 
 import java.util.Date;
 import java.util.List;
 
-
+@Entity
 public class Elevator {
 
     public enum ElevatorType{HORIZONTAL,STAIRS}
     public enum PaintingType {STATIC, STAINLESS}
     public enum WorkingEngine {TWO,FIVE}
     public enum WorkingCapacity{KG125,KG225,KG350}
-
     private String photoURL1, photoURL2;
     private String serialNo;
     private String elevatorInfo;
-    private ElevatorType type;
+    private ElevatorType elevatorType;
     private PaintingType paintingType;
     private Double height,width,workHeight;
     private WorkingEngine engine;
@@ -35,7 +35,7 @@ public class Elevator {
     public Elevator(String serialNo, String elevatorInfo, ElevatorType type, PaintingType paintingType, Double height, Double width, Double workHeight, WorkingEngine motor, WorkingCapacity capacity, GeoPoint point, String user) {
         this.serialNo = serialNo;
         this.elevatorInfo = elevatorInfo;
-        this.type = type;
+        this.elevatorType = type;
         this.paintingType = paintingType;
         this.height = height;
         this.width = width;
@@ -84,6 +84,9 @@ public class Elevator {
         this.maintenances = maintenances;
     }
 
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
 
     public long getNextMaintenanceTime() {
         return nextMaintenanceTime;
@@ -101,8 +104,8 @@ public class Elevator {
         return serialNo;
     }
 
-    public ElevatorType getType() {
-        return type;
+    public ElevatorType getElevatorType() {
+        return elevatorType;
     }
 
     public PaintingType getPaintingType() {
@@ -150,7 +153,7 @@ public class Elevator {
     }
 
     public String formatType(){
-        return type.toString().substring(0,1) + type.toString().substring(1).toLowerCase();
+        return elevatorType.toString().substring(0,1) + elevatorType.toString().substring(1).toLowerCase();
     }
     public String formatPainting(){
         return paintingType.toString().substring(0,1) + paintingType.toString().substring(1).toLowerCase();

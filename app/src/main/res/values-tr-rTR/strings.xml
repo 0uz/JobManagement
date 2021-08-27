@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Job Management</string>
+    <string name="ElevatorListButton">Asansör listesi</string>
+    <string name="prompt_email">E-posta</string>
+    <string name="button_login">Giriş Yap</string>
+    <string name="prompt_password">Şifre</string>
+    <string name="addElevator">Asansör Ekle</string>
+    <string name="addUserText">Kullanıcı Ekle</string>
+    <string name="prompt_name">İsim</string>
+    <string name="prompt_surname">Soyad</string>
+    <string name="button_signup">Yeni Kullanıcı Ekle</string>
+    <string name="error_nameEmpty">İsim zorunlu</string>
+    <string name="error_nameShort">İsim çok kısa</string>
+    <string name="error_surnameEmpty">Soyad zorunlu</string>
+    <string name="error_surnameShort">Soyad çok kısa</string>
+    <string name="error_emailEmpty">E-posta zorunlu</string>
+    <string name="error_emailMatch">E-posta geçerli değil</string>
+    <string name="user_exist">Kullanıcı zaten kayıtlı</string>
+    <string name="userRegister_success">Kayıt başarılı</string>
+    <string name="forgot_password">Parolanızı mı unuttunuz</string>
+    <string name="resetMail_Succes">E-posta başarıyla gönderildi</string>
+    <string name="resetMail_Fail">E-posta gönderilemedi</string>
+    <string name="login_error">E-posta ya da şifre yanlış</string>
+    <string name="error_passwordEmpty">Şifre boş</string>
+    <string name="button_logout">Çıkış Yap</string>
+    <string name="empty">Boş olamaz</string>
+    <string name="button_location">Asansör konumunu ayarla</string>
+    <string name="location_information">Konum bilgisi</string>
+    <string name="save_success">Kayıt başarılı</string>
+    <string name="upload_starting">"Yükleme başlıyor lütfen bekleyin"</string>
+    <string name="select_two_photo">Lütfen sadece 2 fotoğraf seçin</string>
+    <string name="photo_one">Fotoğraf 1</string>
+    <string name="photo_tow">Fotoğraf 2</string>
+    <string name="prompt_phone">Telefon numarası</string>
+    <string name="list_user">Kullanıcı Listesi</string>
+    <string name="ban_success">Yasaklama başarılı</string>
+    <string name="unban_success">Yasak kaldırma başarılı</string>
+    <string name="workingCapacity">Çalışma Kapasitesi</string>
+    <string name="workingEngineNumber">Çalışan motor sayısı</string>
+    <string name="workingEngine">Çalışan motor</string>
+    <string name="workingHeight">Çalışma Yüksekliği(cm)</string>
+    <string name="workingHeight2">Çalışma Yüksekliği</string>
+    <string name="SelectPhoto">Fotoğraf seç</string>
+    <string name="Width">Genişlik</string>
+    <string name="height">Yükseklik</string>
+    <string name="platformSize">Platform boyu(cm)</string>
+    <string name="platformSize2">Platform boyu</string>
+    <string name="stainless_paint">Paslanmaz boya</string>
+    <string name="static_paint">Statik boya</string>
+    <string name="stairs_type">Merdiven tip</string>
+    <string name="horizontal_type">Yatay tip</string>
+    <string name="serial_no">Seri no</string>
+    <string name="customer_ares">Müşteri Bilgileri</string>
+    <string name="location_permission">Lütfen konum izinlerinizi kontrol edin</string>
+    <string name="location_error">Lütfen asansör yerini öğreniniz</string>
+    <string name="elevator_exist">Bu seri no ile kayıtlı asansör var</string>
+    <string name="serial_length">Seri no 7 karakterden oluşmalıdır</string>
+    <string name="serial_error">"Format böyle olmalıdır: 14-1234 "</string>
+    <string name="customer_info">Müşteri Bilgileri</string>
+    <string name="details">Detaylar</string>
+    <string name="createTime">Zaman Oluştur</string>
+    <string name="lastPeriodic">Son bakım</string>
+    <string name="paintType">Boya tipi</string>
+    <string name="serviceInfo">Servis Bilgisi</string>
+    <string name="notExistUser">"Mevcut kullanıcı yok"</string>
+    <string name="job_description">Zırh Grup</string>
+    <string name="changed_parts">Değiştirilen Parçalar</string>
+    <string name="add_part">Parça Ekle</string>
+    <string name="save">Kaydet</string>
+    <string name="part_name">Parça İsmi</string>
+    <string name="error_charLength">Karakter en az</string>
+    <string name="delete">Sil</string>
+    <string name="error">Bir şeyler ters gitti</string>
+    <string name="customMaintenance">Custom Maintenance</string>
+    <string name="periodicMaintenance">Periodic</string>
+    <string name="type">Type</string>
+    <string name="maintenances">Maintenances</string>
+
+    <string-array name="HorizontalTypeArray">
+        <item>Hidrolik</item>
+        <item>Vidalı</item>
+    </string-array>
+
+    <string-array name="StairsTypeArray">
+        <item>Eco</item>
+        <item>Gold</item>
+        <item>Premium</item>
+    </string-array>
+    <string name="date">Tarih</string>
+    <string name="owner">Yapan</string>
+</resources>

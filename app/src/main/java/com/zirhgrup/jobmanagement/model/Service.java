@@ -19,7 +19,7 @@ public class Service extends User {
     public Service(String name, String surname, String email, String phoneNo, boolean isBanned) {
         super(name, surname, email, phoneNo,Role.SERVICE);
         this.isBanned = isBanned;
-        this.createTime = new Date().getTime();
+        this.createTime = new Date().getTime()/1000;
 
     }
 
