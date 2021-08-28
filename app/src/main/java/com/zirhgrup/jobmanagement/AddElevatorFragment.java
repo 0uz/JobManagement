@@ -125,7 +125,7 @@ public class AddElevatorFragment extends Fragment {
 
 
     void createToast() {
-        Toast.makeText(getContext(), "Please fill all blanks", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getString(R.string.blanks), Toast.LENGTH_SHORT).show();
     }
 
     void createTimerRadioError(RadioButton view, String msg) {
@@ -313,8 +313,8 @@ public class AddElevatorFragment extends Fragment {
     void checkFields(){
         String emptyError = getResources().getString(R.string.empty);
         if (bitmaps.size() == 0) {
-            binding.addEPhotoButton.setError("Please upload photo");
-            createTimerButtonError(binding.addEPhotoButton, "Please upload photo");
+            binding.addEPhotoButton.setError(getString(R.string.select_photo));
+            createTimerButtonError(binding.addEPhotoButton, getString(R.string.select_photo));
             createToast();
             return;
         }
@@ -502,7 +502,7 @@ public class AddElevatorFragment extends Fragment {
         i.setType("image/*");
         i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         i.setAction(Intent.ACTION_GET_CONTENT);
-        activityResultSelectImage.launch(Intent.createChooser(i, "Select Elevators"));
+        activityResultSelectImage.launch(Intent.createChooser(i, getString(R.string.select_elevators)));
     }
 
     @Override

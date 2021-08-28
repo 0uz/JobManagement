@@ -53,11 +53,11 @@ public class AddMaintenanceFragment extends Fragment {
         parts = new ArrayList<>();
 
         if (getArguments().getString("type").equals("periodic")){
-            binding.titleTextView.setText("Periodic Maintenance");
+            binding.titleTextView.setText(getString(R.string.periodicMaintenance));
             type = Maintenance.MaintenanceType.PERIODIC;
         }else{
             type = Maintenance.MaintenanceType.CUSTOM;
-            binding.titleTextView.setText("Custom Maintenance");
+            binding.titleTextView.setText(getString(R.string.customMaintenance));
         }
 
         binding.addPartButton.setOnClickListener(new View.OnClickListener() {

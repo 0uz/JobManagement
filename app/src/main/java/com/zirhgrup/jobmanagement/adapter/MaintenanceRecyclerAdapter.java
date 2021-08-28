@@ -1,6 +1,8 @@
 package com.zirhgrup.jobmanagement.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.style.AlignmentSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +43,15 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
         holder.description.setText(maintenances.get(position).getJobExplanation());
         holder.owner.setText(context.getString(R.string.owner)+": "+maintenances.get(position).getOwnerServiceEmail());
         holder.date.setText(context.getString(R.string.date)+": "+StaticFun.getTimeData(maintenances.get(position).getCreateTime()));
+
+        holder.owner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_SENDTO);
+                i.setData(Uri.parse("mailto:"+maintenances.get(position).getOwnerServiceEmail()));
+                context.startActivity(i);
+            }
+        });
 
         for (Part part : maintenances.get(position).getChangedParts()){
             TextView tv = new TextView(context);

@@ -111,14 +111,7 @@ public class MainPageFragment extends Fragment {
         binding.testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseLayer.getDb().collection("elevators").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (DocumentSnapshot data : queryDocumentSnapshots.getDocuments()){
-                            Log.d("data",data.toString());
-                        }
-                    }
-                });
+
             }
         });
 

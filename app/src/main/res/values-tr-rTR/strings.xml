@@ -59,12 +59,12 @@
     <string name="serial_error">"Format böyle olmalıdır: 14-1234 "</string>
     <string name="customer_info">Müşteri Bilgileri</string>
     <string name="details">Detaylar</string>
-    <string name="createTime">Zaman Oluştur</string>
+    <string name="createTime">Takılan Tarih</string>
     <string name="lastPeriodic">Son bakım</string>
     <string name="paintType">Boya tipi</string>
     <string name="serviceInfo">Servis Bilgisi</string>
     <string name="notExistUser">"Mevcut kullanıcı yok"</string>
-    <string name="job_description">Zırh Grup</string>
+    <string name="job_description">Yapılan iş</string>
     <string name="changed_parts">Değiştirilen Parçalar</string>
     <string name="add_part">Parça Ekle</string>
     <string name="save">Kaydet</string>
@@ -72,10 +72,10 @@
     <string name="error_charLength">Karakter en az</string>
     <string name="delete">Sil</string>
     <string name="error">Bir şeyler ters gitti</string>
-    <string name="customMaintenance">Custom Maintenance</string>
-    <string name="periodicMaintenance">Periodic</string>
-    <string name="type">Type</string>
-    <string name="maintenances">Maintenances</string>
+    <string name="customMaintenance">Özel Bakım</string>
+    <string name="periodicMaintenance">Periyodik Bakım</string>
+    <string name="type">Tür</string>
+    <string name="maintenances">Bakımlar</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hidrolik</item>
@@ -89,4 +89,9 @@
     </string-array>
     <string name="date">Tarih</string>
     <string name="owner">Yapan</string>
+    <string name="blanks">Lütfen bütün boşlukları doldurun</string>
+    <string name="select_photo">"Lütfen fotoğraf seçin "</string>
+    <string name="select_elevators">İki tane asansör fotoğrafı seçin</string>
+    <string name="addPeriodic">Periyodik Bakım\nEkle</string>
+    <string name="addCustom">Özel Bakım\nEkle</string>
 </resources>

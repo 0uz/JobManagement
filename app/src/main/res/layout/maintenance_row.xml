@@ -31,8 +31,9 @@
         </View>
         <View android:layout_width="1dp" android:layout_height="0dp"
               app:layout_constraintStart_toEndOf="@+id/view2"
-              android:background="@color/black" app:layout_constraintTop_toTopOf="@+id/maintenType"
-              android:id="@+id/view4" app:layout_constraintBottom_toBottomOf="@+id/changedParts">
+              app:layout_constraintTop_toTopOf="@+id/maintenType"
+              android:id="@+id/view4" app:layout_constraintBottom_toBottomOf="@+id/changedParts"
+              android:background="@color/black">
 
         </View>
         <TextView

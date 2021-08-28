@@ -1,6 +1,8 @@
 package com.zirhgrup.jobmanagement.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,9 +110,9 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
 
         long now = new Date().getTime();
         if (elevator.get(position).getNextMaintenanceTime() <= (now/1000)){
-            holder.maintenanceButton.setText("Add Periodic\nMaintenance");
+            holder.maintenanceButton.setText(context.getString(R.string.addPeriodic));
         }else{
-            holder.maintenanceButton.setText("Add Custom\nMaintenance");
+            holder.maintenanceButton.setText(context.getString(R.string.addCustom));
         }
 
         holder.maintenanceButton.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +142,43 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
                 }else{
                     holder.maintenance.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        holder.customerNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_DIAL);
+                i.setData(Uri.parse("tel:"+elevator.get(position).getCustomer().getPhoneNo()));
+                context.startActivity(i);
+            }
+        });
+
+        holder.serviceNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_DIAL);
+                i.setData(Uri.parse("tel:"+elevator.get(position).getOwnerData().getPhoneNo()));
+                context.startActivity(i);
+            }
+        });
+
+        holder.serviceMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_SENDTO);
+                i.setData(Uri.parse("mailto:"+elevator.get(position).getOwnerData().getEmail()));
+                context.startActivity(i);
+            }
+        });
+
+        holder.locationText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+elevator.get(position).getPoint().getLatitude()+","+elevator.get(position).getPoint().getLongitude());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                context.startActivity(mapIntent);
             }
         });
 

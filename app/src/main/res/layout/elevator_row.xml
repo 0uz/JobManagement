@@ -24,9 +24,9 @@
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout" android:layout_marginEnd="16dp"/>
             <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="10dp"
                     app:layout_constraintStart_toEndOf="@+id/elevatorImageView"
                     android:id="@+id/linearLayout"
                     app:layout_constraintTop_toTopOf="parent">
@@ -56,10 +56,9 @@
                     android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toEndOf="@+id/linearLayout"
                     app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-                    android:id="@+id/linearLayout4" android:layout_marginStart="6dp" android:layout_marginEnd="10dp"
-            >
+                    android:id="@+id/linearLayout4" android:layout_marginEnd="10dp"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout" android:layout_marginStart="8dp">
                 <TextView
                         android:text="@string/customer_info"
                         android:layout_width="wrap_content"
@@ -68,12 +67,12 @@
                         android:textColor="#EC7272"/>
                 <TextView
                         android:text="TextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/customerName"
                         android:layout_marginBottom="8dp" android:layout_marginLeft="4dp"/>
                 <TextView
                         android:text="TextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/customerMail"
                         android:layout_marginBottom="8dp" android:layout_marginLeft="4dp" android:singleLine="false"
                         android:ellipsize="none"/>

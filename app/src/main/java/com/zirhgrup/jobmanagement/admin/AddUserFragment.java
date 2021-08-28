@@ -51,7 +51,6 @@ public class AddUserFragment extends Fragment {
                 boolean nameVAL = validateString(binding.addUserEditTextName,1, R.string.error_nameEmpty,R.string.error_nameShort);
                 boolean surnameVAL = validateString(binding.addUserEditTextSurname, 1,R.string.error_surnameEmpty,R.string.error_surnameShort);
                 boolean emailVAL = validateEmail(binding.addUserEditTextEmail);
-//                boolean phoneVAL = vali
                 if (nameVAL && surnameVAL && emailVAL){
                    createUser(binding.addUserEditTextName.getText().toString(),
                         binding.addUserEditTextSurname.getText().toString(),

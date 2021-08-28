@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String mailTV = binding.editTextEmailAddress.getText().toString();
                 if(!StaticFun.validateEmail(mailTV)){
-                    binding.editTextEmailAddress.setError("Please Enter mail");
+                    binding.editTextEmailAddress.setError(getString(R.string.error_emailEmpty));
                     return;
                 }
                 DatabaseLayer.getmAuth().sendPasswordResetEmail(mailTV).addOnCompleteListener(new OnCompleteListener<Void>() {
