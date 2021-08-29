@@ -3,6 +3,7 @@ package com.zirhgrup.jobmanagement;
 import android.os.Bundle;
 import android.util.Log;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ActionBar bar = getSupportActionBar();
+        bar.hide();
         layer = DatabaseLayer.createDatabase();
         layer.checkCurrentUser(this);
         elevatorsRef = DatabaseLayer.getDb().collection("elevators");
@@ -73,15 +76,16 @@ public class MainActivity extends AppCompatActivity {
                         case MODIFIED:
                             Elevator changed = dc.getDocument().toObject(Elevator.class);
                             for (Elevator elevator : elevators) {
-                                if (elevator.getSerialNo() == changed.getSerialNo()) {
+                                if (elevator.getSerialNo().equals(changed.getSerialNo())) {
                                     elevators.set(elevators.indexOf(elevator), changed);
+                                    handleData();
                                 }
                             }
                             break;
                         case REMOVED:
                             Elevator removed = dc.getDocument().toObject(Elevator.class);
                             for (Elevator elevator : elevators) {
-                                if (elevator.getSerialNo() == removed.getSerialNo()) {
+                                if (elevator.getSerialNo().equals(removed.getSerialNo())) {
                                     elevators.remove(elevator);
                                 }
                             }

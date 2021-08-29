@@ -49,6 +49,7 @@ public class ListElevatorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ShareViewModel model = new ViewModelProvider(requireActivity()).get(ShareViewModel.class);
+
         model.getElevator().observe(getViewLifecycleOwner(), elevators->{
             ElevatorRecyclerAdapter adapter = new ElevatorRecyclerAdapter(getContext(),elevators,ListElevatorFragment.this);
             binding.elevatorListRecyclerView.setAdapter(adapter);
