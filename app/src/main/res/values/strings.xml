@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Job Management</string>
+    <string name="app_name">Zırh Grup</string>
     <string name="ElevatorListButton">Elevator list</string>
     <string name="prompt_email">Email</string>
     <string name="button_login">Login</string>
@@ -82,6 +82,9 @@
     <string name="select_elevators">Select two elevator photo</string>
     <string name="addPeriodic">Add Periodic\nMaintenance</string>
     <string name="addCustom">Add Custom\nMaintenance</string>
+    <string name="emptyParts">Are you sure save any changed parts ?</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_phone">Phone number is invalid (Starts with 0)</string>
 
     <string-array name="HorizontalTypeArray">
         <item>Hydraulic</item>

@@ -64,6 +64,10 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
             holder.bottom.setVisibility(View.INVISIBLE);
         }
 
+        if (maintenances.get(position).getChangedParts().size()==0){
+            holder.changedPartsTV.setVisibility(View.GONE);
+        }
+
 
 
     }
@@ -74,7 +78,7 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
     }
 
     public class MaintenanceViewHolder extends RecyclerView.ViewHolder{
-        TextView type,description,owner,date;
+        TextView type,description,owner,date,changedPartsTV;
         LinearLayout changedParts;
         View bottom;
 
@@ -86,6 +90,7 @@ public class MaintenanceRecyclerAdapter extends RecyclerView.Adapter<Maintenance
             date = itemView.findViewById(R.id.maintenanceDate);
             changedParts = itemView.findViewById(R.id.changedParts);
             bottom = itemView.findViewById(R.id.bottomView);
+            changedPartsTV = itemView.findViewById(R.id.changedPartsTextView);
 
         }
     }

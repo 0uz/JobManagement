@@ -108,8 +108,8 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
             }
         });
 
-        long now = new Date().getTime();
-        if (elevator.get(position).getNextMaintenanceTime() <= (now/1000)){
+        long now = new Date().getTime()/1000;
+        if (elevator.get(position).getNextMaintenanceTime() <= now){
             holder.maintenanceButton.setText(context.getString(R.string.addPeriodic));
         }else{
             holder.maintenanceButton.setText(context.getString(R.string.addCustom));
@@ -133,6 +133,10 @@ public class ElevatorRecyclerAdapter extends RecyclerView.Adapter<ElevatorRecycl
 
             }
         });
+
+        if (elevator.get(position).getMaintenances() == null){
+            holder.changedPartsButton.setVisibility(View.GONE);
+        }
 
         holder.changedPartsButton.setOnClickListener(new View.OnClickListener() {
             @Override

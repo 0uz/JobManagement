@@ -1,6 +1,8 @@
 package com.zirhgrup.jobmanagement;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -34,6 +36,7 @@ public class AddMaintenanceFragment extends Fragment {
     FragmentAddMaintenanceBinding binding;
     List<Part> parts;
     Maintenance.MaintenanceType type;
+
     public AddMaintenanceFragment() {
         // Required empty public constructor
     }
@@ -63,16 +66,25 @@ public class AddMaintenanceFragment extends Fragment {
         binding.addPartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (binding.partNameET.getText().toString().isEmpty() || binding.partNameET.getText().toString().length() < 4 ){
+                    Toast.makeText(getContext(), getString(R.string.blanks), Toast.LENGTH_SHORT).show();
+                    binding.partNameET.setError(getString(R.string.empty));
+                    return;
+                }
+                if (binding.addPartJobDescET.getText().toString().isEmpty() || binding.addPartJobDescET.getText().toString().length() < 4 ){
+                    Toast.makeText(getContext(), getString(R.string.blanks), Toast.LENGTH_SHORT).show();
+                    binding.addPartJobDescET.setError(getString(R.string.empty));
+                    return;
+                }
 
                 Part part =  new Part(binding.partNameET.getText().toString(),binding.addPartJobDescET.getText().toString());
-
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.part_row,null);
                 Button button = view.findViewById(R.id.partRow_deleteButton);
                 TextView name = view.findViewById(R.id.partRow_partName);
                 TextView desc = view.findViewById(R.id.partRow_partDesc);
-                name.setText("Part name: "+binding.partNameET.getText());
-                desc.setText("Description: "+binding.addPartJobDescET.getText());
+                name.setText(getString(R.string.part_name)+": "+binding.partNameET.getText());
+                desc.setText(getString(R.string.job_description)+": "+binding.addPartJobDescET.getText());
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -92,45 +104,66 @@ public class AddMaintenanceFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (binding.jobDescriptionET.getText().toString().length() < 6 || binding.jobDescriptionET.getText().toString().isEmpty()){
-                    binding.jobDescriptionET.setError(R.string.error_charLength+" 6");
+                    binding.jobDescriptionET.setError(getString(R.string.error_charLength)+" 6");
                     return;
                 }
-                binding.saveButton.setEnabled(false);
-                binding.progressBar.setVisibility(View.VISIBLE);
-                Maintenance maintenance =  new Maintenance(type,getArguments().getString("user"),binding.jobDescriptionET.getText().toString(),parts);
-                if (type == Maintenance.MaintenanceType.PERIODIC){
-                    DatabaseLayer.getDb().collection("elevators").document(getArguments().getString("serial")).
-                            update("maintenances", FieldValue.arrayUnion(maintenance),"nextMaintenanceTime",getArguments().getLong("maintenance")+7889229).
-                            addOnSuccessListener(new OnSuccessListener<Void>() {
+                Log.d("Parts", "onClick: "+parts.size());
+                if (parts.size() == 0){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage(R.string.emptyParts)
+                            .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onSuccess(Void unused) {
-                                    NavHostFragment.findNavController(AddMaintenanceFragment.this).popBackStack();
-                                    Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+                                public void onClick(DialogInterface dialog, int which) {
+                                    save();
                                 }
-                            }).addOnFailureListener(new OnFailureListener() {
+                            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+                                public void onClick(DialogInterface dialog, int which) {
+
                                 }
-                            });
+                            }).create().show();
                 }else{
-                    DatabaseLayer.getDb().collection("elevators").document(getArguments().getString("serial")).update("maintenances", FieldValue.arrayUnion(maintenance)).
-                            addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    NavHostFragment.findNavController(AddMaintenanceFragment.this).popBackStack();
-                                    Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    save();
                 }
 
             }
         });
+    }
+
+    private void save(){
+        binding.saveButton.setEnabled(false);
+        binding.progressBar.setVisibility(View.VISIBLE);
+        Maintenance maintenance =  new Maintenance(type,getArguments().getString("user"),binding.jobDescriptionET.getText().toString(),parts);
+        if (type == Maintenance.MaintenanceType.PERIODIC){
+            DatabaseLayer.getDb().collection("elevators").document(getArguments().getString("serial")).
+                    update("maintenances", FieldValue.arrayUnion(maintenance),"nextMaintenanceTime",getArguments().getLong("maintenance")+7889229).
+                    addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            NavHostFragment.findNavController(AddMaintenanceFragment.this).popBackStack();
+                            Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else{
+            DatabaseLayer.getDb().collection("elevators").document(getArguments().getString("serial")).update("maintenances", FieldValue.arrayUnion(maintenance)).
+                    addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            NavHostFragment.findNavController(AddMaintenanceFragment.this).popBackStack();
+                            Toast.makeText(getContext(), getString(R.string.save_success), Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), getString(R.string.error), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     @Override

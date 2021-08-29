@@ -87,6 +87,7 @@
         <item>Gold</item>
         <item>Premium</item>
     </string-array>
+
     <string name="date">Tarih</string>
     <string name="owner">Yapan</string>
     <string name="blanks">Lütfen bütün boşlukları doldurun</string>
@@ -94,4 +95,7 @@
     <string name="select_elevators">İki tane asansör fotoğrafı seçin</string>
     <string name="addPeriodic">Periyodik Bakım\nEkle</string>
     <string name="addCustom">Özel Bakım\nEkle</string>
+    <string name="emptyParts">Parça eklemeden kaydetmek istediğinize emin misiniz?</string>
+    <string name="cancel">İptal</string>
+    <string name="error_phone">Geçerli olmayan numara (0 ile başlamalı)</string>
 </resources>

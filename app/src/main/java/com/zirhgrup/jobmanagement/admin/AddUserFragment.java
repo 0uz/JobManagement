@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class AddUserFragment extends Fragment {
@@ -43,7 +45,7 @@ public class AddUserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         layer = DatabaseLayer.createDatabase();
-
+        binding.addUserSingupButton.setEnabled(true);
 
         binding.addUserSingupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,8 +53,10 @@ public class AddUserFragment extends Fragment {
                 boolean nameVAL = validateString(binding.addUserEditTextName,1, R.string.error_nameEmpty,R.string.error_nameShort);
                 boolean surnameVAL = validateString(binding.addUserEditTextSurname, 1,R.string.error_surnameEmpty,R.string.error_surnameShort);
                 boolean emailVAL = validateEmail(binding.addUserEditTextEmail);
-                if (nameVAL && surnameVAL && emailVAL){
-                   createUser(binding.addUserEditTextName.getText().toString(),
+                boolean phoneVAL = validatePhone(binding.addUserEditTextPhone);
+                if (nameVAL && surnameVAL && emailVAL && phoneVAL){
+                   binding.addUserSingupButton.setEnabled(false);
+                    createUser(binding.addUserEditTextName.getText().toString(),
                         binding.addUserEditTextSurname.getText().toString(),
                         binding.addUserEditTextEmail.getText().toString(),
                         binding.addUserEditTextPhone.getText().toString());
@@ -71,12 +75,20 @@ public class AddUserFragment extends Fragment {
                     Service service = new Service(name,surname,email,phoneNo,false);
                     DatabaseLayer.getDb().collection("users").document(service.getEmail()).set(service);
                     Toast.makeText(getContext(),getString(R.string.userRegister_success),Toast.LENGTH_LONG).show();
+                    clearFields();
                 }else{
                     Toast.makeText(getContext(),getString(R.string.user_exist),Toast.LENGTH_LONG).show();
                 }
             }
         });
 
+    }
+
+    private void clearFields(){
+        binding.addUserEditTextName.setText("");
+        binding.addUserEditTextSurname.setText("");
+        binding.addUserEditTextEmail.setText("");
+        binding.addUserEditTextPhone.setText("");
     }
 
 
@@ -110,14 +122,28 @@ public class AddUserFragment extends Fragment {
     boolean validateEmail(EditText view){
         String data = view.getText().toString();
         if (data.isEmpty()){
-            view.setError(getResources().getString(R.string.error_emailEmpty));
+            view.setError(getString(R.string.error_emailEmpty));
             return false;
         }else if (!Patterns.EMAIL_ADDRESS.matcher(data).matches()){
-            view.setError(getResources().getString(R.string.error_emailMatch));
+            view.setError(getString(R.string.error_emailMatch));
             return false;
         }else{
             return true;
         }
+    }
+
+    boolean validatePhone(EditText view){
+        String regex = "[0][0-9]{10}";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(view.getText().toString());
+        if (matcher.matches()){
+            return true;
+        }else{
+            view.setError(getString(R.string.error_phone));
+            return false;
+        }
+
+
     }
 
 }

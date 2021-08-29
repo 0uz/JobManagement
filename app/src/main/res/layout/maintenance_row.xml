@@ -67,13 +67,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="@+id/maintenanceOwner"
                 app:layout_constraintTop_toBottomOf="@+id/maintenanceOwner" android:layout_marginTop="10dp"
-                android:clickable="true" android:id="@+id/textView6" android:textColor="#EC7272"/>
+                android:clickable="true" android:id="@+id/changedPartsTextView" android:textColor="#EC7272"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/textView6"
-                app:layout_constraintStart_toStartOf="@+id/textView6" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/changedPartsTextView"
+                app:layout_constraintStart_toStartOf="@+id/changedPartsTextView" app:layout_constraintEnd_toEndOf="parent"
                 android:id="@+id/changedParts"
                 app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="10dp">
         </LinearLayout>

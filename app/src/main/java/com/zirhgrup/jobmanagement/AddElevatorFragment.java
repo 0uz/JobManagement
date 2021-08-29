@@ -46,6 +46,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -412,16 +414,32 @@ public class AddElevatorFragment extends Fragment {
             createToast();
             return;
         }
-        if (StaticFun.validateEmail(binding.addECustomerEmail.getText().toString()) && binding.addECustomerEmail.getText().toString().isEmpty()){
+
+        if (binding.addECustomerEmail.getText().toString().length() > 1){
+            if (!StaticFun.validateEmail(binding.addECustomerEmail.getText().toString())){
+                binding.addECustomerEmail.setError(getString(R.string.error_emailMatch));
+                return;
+            }
+        }else{
             binding.addECustomerEmail.setError(emptyError);
             createToast();
             return;
         }
 
+
+
         if (binding.addECustomerPhone.getText().toString().isEmpty()){
             binding.addECustomerPhone.setError(emptyError);
             createToast();
             return;
+        }else{
+            String regex = "[0][0-9]{10}";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(binding.addECustomerPhone.getText().toString());
+            if (!matcher.matches()){
+                binding.addECustomerPhone.setError(getString(R.string.error_phone));
+                return;
+            }
         }
         Customer customer =  new Customer(binding.addECustomerName.getText().toString(),
                 binding.addECustomerSurname.getText().toString(),
